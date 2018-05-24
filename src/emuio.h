@@ -4,10 +4,11 @@
 
 #include <stdint.h>
 
-int32_t const INSTRUCTION_LENGTH = 32;
-char const ONE = '1';
-char const ZERO = '0';
-char const EOF = '\0';
+#define INSTRUCTION_LENGTH 32
+#define ONE '1'
+#define ZERO '0'
+#define EOF '\0'
+#define BYTES_IN_WORD 4
 
 //instruction from file to address
 int32_t read(char *fileName, int32_t *address);
