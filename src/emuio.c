@@ -3,20 +3,25 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
+#include <stdint.h>
+#include <assert.h>
+#include <ctype.h>
 #include "emuio.h"
+#include "emuutils.h"
+#include "emudef.h"
 
-int read(char *fileName, int *address) {
+int32_t read(char *fileName, int32_t *address) {
 
     FILE *file;
 
     char *buffer;
     unsigned long lengthFile;
 
-    char *buffer;
-    unsigned long fileLen;
+    file = fopen(fileName, "rb");
 
-    file = fopen(fileName, "r");
+    assert(file != NULL);
 
     if (!file) {
         fprintf(stderr, "Unable to open file %s", fileName);
@@ -24,10 +29,15 @@ int read(char *fileName, int *address) {
     }
 
     fseek(file, 0, SEEK_END);
-    fileLen = ftell(file);
+    lengthFile = ftell(file);
+
+    assert(lengthFile % INSTRUCTION_LENGTH == 0);
+
     fseek(file, 0, SEEK_SET);
 
-    buffer = (char *) malloc(fileLen + 1);
+    buffer = (char *) malloc(lengthFile + 1);
+
+    assert(buffer != NULL);
 
     if (!buffer) {
         fprintf(stderr, "Memory error!");
@@ -35,16 +45,18 @@ int read(char *fileName, int *address) {
         return 0;
     }
 
-    fread(buffer, fileLen, 1, file);
+    fread(buffer, lengthFile, 1, file);
     fclose(file);
 
     convert(buffer, address);
 
     free(buffer);
 
+    return sizeof(address) / sizeof(address[0]);
+
 }
 
-int convert(char *buffer, int *address) {
+int32_t convert(char *buffer, int32_t *address) {
     int x = 0;
     int y = 0;
 
@@ -53,6 +65,7 @@ int convert(char *buffer, int *address) {
         int decimal = 0;
         int power = INSTRUCTION_LENGTH - 1;
         for (int i = 0; i < INSTRUCTION_LENGTH; ++i) {
+            assert(buffer[y] == ZERO || buffer[y] == ONE);
             if (buffer[y] == ONE) {
                 decimal += pow(2, power);
             }
@@ -64,5 +77,21 @@ int convert(char *buffer, int *address) {
     }
 
     return 0;
+}
+
+void write(Storage_t *storage) {
+
+    assert(storage != NULL);
+
+    for (int i = 0; i < NUMBERS_OF_REG; ++i) {
+        printf("Reg%d = %d\n", i, storage.reg[i]);
+    }
+
+    for (int j = 0; j < MEMORY_SIZE; ++j) {
+        if (storage.mem[i] != 0) {
+            printf("The content at Memory location %d is %d\n",
+                   storage.mem[i], *storage.mem[i]);
+        }
+    }
 }
 
