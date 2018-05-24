@@ -87,11 +87,11 @@ void write(Storage_t *storage) {
 
     for (int i = 0; i < 13; i++) {
         printf("$%-3d", i);
-        printf(": %10d (0x%08x)\n", storage.reg[i], storage.reg[i]);
+        printf(": %10d (0x%08x)\n", storage->reg[i], storage->reg[i]);
     }
 
     printf("PC");
-    printf(": %10d (0x%08x)\n", storage.reg[15], storage.reg[15]);
+    printf(": %10d (0x%08x)\n", storage->reg[15], storage->reg[15]);
 
 //  PART I: initialize the CPSR to 0
     printf("CPSR");
@@ -100,10 +100,10 @@ void write(Storage_t *storage) {
 
     printf("Non-zero memory location: \n");
     for (int i = 0; i < MEMORY_SIZE; i += BYTES_IN_WORD) {
-        if (((int *) storage.mem)[i / BYTES_IN_WORD] != 0) {
+        if (((int *) storage->mem)[i / BYTES_IN_WORD] != 0) {
             printf("0x%08x: 0x", i);
             for (int j = 0; j < BYTES_IN_WORD; j++) {
-                printf("%02x", storage.mem[i + j]);
+                printf("%02x", storage->mem[i + j]);
             }
             printf("\n");
         }
