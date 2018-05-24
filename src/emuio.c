@@ -51,7 +51,7 @@ int convert(char *buffer, int *address) {
 
     while (buffer[y] != EOF) {
         int decimal = 0;
-        int power = 31;
+        int power = INSTRUCTION_LENGTH - 1;
         for (int i = 0; i < INSTRUCTION_LENGTH; ++i) {
             if (buffer[y] == ONE) {
                 decimal += pow(2, power);

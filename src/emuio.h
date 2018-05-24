@@ -3,7 +3,7 @@
 //
 
 int const INSTRUCTION_LENGTH = 32;
-char const ONE = '\001';
+char const ONE = '1';
 char const EOF = '\0';
 
 //instruction from file to address
