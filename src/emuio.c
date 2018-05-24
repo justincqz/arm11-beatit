@@ -2,13 +2,14 @@
 // Created by Yoram Boccia on 24/05/2018.
 //
 
+#include "emuio.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <stdint.h>
 #include <assert.h>
 #include <ctype.h>
-#include "emuio.h"
 #include "emuutils.h"
 #include "emudef.h"
 
