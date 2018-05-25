@@ -5,26 +5,27 @@
 #ifndef ARM11_11_ALU_H
 #define ARM11_11_ALU_H
 
+#include <stdint.h>
 #include "emustruct.h"
 
-void andd(int a, int b, Condition_Field_t *cond, int *address);
+void andd(uint32_t a, uint32_t b, int *d, int *cpsr, int s);
 
-void eor(int a, int b, Condition_Field_t *cond, int *address);
+void eor(uint32_t a, uint32_t b, int *d, int *cpsr, int s);
 
-void sub(int a, int b, Condition_Field_t *cond, int *address);
+void sub(uint32_t a, uint32_t b, int *d, int *cpsr, int s);
 
-void rsb(int a, int b, Condition_Field_t *cond, int *address);
+void rsb(uint32_t a, uint32_t b, int *d, int *cpsr, int s);
 
-void add(int a, int b, Condition_Field_t *cond, int *address);
+void add(uint32_t a, uint32_t b, int *d, int *cpsr, int s);
 
-void tst(int a, int b, Condition_Field_t *cond, int *address);
+void tst(uint32_t a, uint32_t b, int *cpsr, int s);
 
-void teq(int a, int b, Condition_Field_t *cond, int *address);
+void teq(uint32_t a, uint32_t b, int *cpsr, int s);
 
-void cmp(int a, int b, Condition_Field_t *cond, int *address);
+void cmp(uint32_t a, uint32_t b, int *cpsr, int s);
 
-void orr(int a, int b, Condition_Field_t *cond, int *address);
+void orr(uint32_t a, uint32_t b, int *d, int *cpsr, int s);
 
-void move(int a, int b, Condition_Field_t *cond, int *address);
+void move(int a, int *d, int *cpsr, int s);
 
 #endif //ARM11_11_ALU_H
