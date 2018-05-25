@@ -35,17 +35,19 @@ int32_t *convertToBinary(int32_t code) {
 }
 
 int32_t convertToDecimal(int32_t *code, int32_t size) {
-        int32_t decimal = 0;
-        int power = size - 1;
+    assert(code);
 
-        for (int i = 0; i < size; ++i) {
-            assert(code[i] == 0 || code[i] == 1);
-            if (code[i] == 1) {
-                decimal += powerOfTwo(power);
-            }
-            power--;
+    int32_t decimal = 0;
+    int power = size - 1;
+
+    for (int i = 0; i < size; ++i) {
+        assert(code[i] == 0 || code[i] == 1);
+        if (code[i] == 1) {
+            decimal += powerOfTwo(power);
         }
+        power--;
+    }
 
-        return decimal;
+    return decimal;
 }
 
