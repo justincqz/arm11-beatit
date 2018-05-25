@@ -85,6 +85,6 @@ void decode_branch(int32_t code, Instruction_t *ins){
     assert(ins->instruction_type == BRANCH);
 
     decode_cond_instruction(code, ins);
-    ins->imm = extract_code(code, 0, 23);
+    ins->address = extract_code(code, 0, 23);
 
 }
