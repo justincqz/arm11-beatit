@@ -1,0 +1,15 @@
+1. finish emuio.c: (Yoram)
+	compiled with other files.
+	tested thourougly.
+
+2. finish emudecode.c: (Yoram)
+	same as above
+
+3. finish emuexecute.c: (Harry)
+	same as above
+
+4. Maintain the otherfiles (Harry)
+	error report in emulate.c
+	memory maintain in all files
+    style consistency
+Finish above items before this Sunday.
