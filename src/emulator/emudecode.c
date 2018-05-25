@@ -15,7 +15,7 @@ int32_t extract_code(int32_t code, int32_t lower_bit, int32_t upper_bit) {
         result[i] = binary[INSTRUCTION_LENGTH - upper_bit - 1 + i];
     }
 
-    return convertToDecimal(result);
+    return convertToDecimal(result, size);
 }
 
 void decode_cond_instruction(int32_t code, Instruction_t *ins) {
@@ -47,7 +47,6 @@ void decode_multiply(int32_t code, Instruction_t *ins){
     ins->rn = extract_code(code, 12, 15);
     ins->rs = extract_code(code, 8, 11);
     ins->rm = extract_code(code, 0, 3);
-
 
 }
 

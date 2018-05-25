@@ -98,8 +98,7 @@ void emuwrite(Storage_t *storage) {
 
 //  PART I: initialize the CPSR to 0
     printf("CPSR");
-    int cpsr = 0;
-    printf(": %10d (0x%08x)\n", cpsr, cpsr);
+    printf(": %10d (0x%08x)\n", storage->reg[CPSR_REG], storage->reg[CPSR_REG]);
 
     printf("Non-zero memory location: \n");
     for (int i = 0; i < MEMORY_SIZE; i += BYTES_FOR_INT) {

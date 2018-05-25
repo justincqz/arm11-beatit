@@ -9,7 +9,7 @@
 
 int32_t *convertToBinary(int32_t code);
 
-int32_t convertToDecimal(int32_t *code);
+int32_t convertToDecimal(int32_t *code, int32_t size);
 
 int32_t powerOfTwo(int power);
 

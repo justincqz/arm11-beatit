@@ -7,7 +7,16 @@
 #include "emuio.h"
 
 
-int32_t powerOfTwo(int power);
+int32_t powerOfTwo(int power) {
+
+    int32_t result = 1;
+    for (int i = 0; i < power; ++i) {
+        result *= 2;
+    }
+
+    return result;
+
+}
 
 
 int32_t *convertToBinary(int32_t code) {
@@ -25,28 +34,18 @@ int32_t *convertToBinary(int32_t code) {
     return binary;
 }
 
-int32_t convertToDecimal(int32_t *code) {
+int32_t convertToDecimal(int32_t *code, int32_t size) {
         int32_t decimal = 0;
-        int power = 0;
+        int power = size - 1;
 
-        for (int i = 0; i < INSTRUCTION_LENGTH; ++i) {
+        for (int i = 0; i < size; ++i) {
             assert(code[i] == 0 || code[i] == 1);
             if (code[i] == 1) {
                 decimal += powerOfTwo(power);
             }
-            power++;
+            power--;
         }
 
         return decimal;
 }
 
-int32_t powerOfTwo(int power) {
-
-    int32_t result = 1;
-    for (int i = 0; i < power; ++i) {
-        result *= 2;
-    }
-
-    return result;
-
-}
