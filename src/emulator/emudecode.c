@@ -2,21 +2,28 @@
 #include<assert.h>
 #include"emustruct.h"
 #include"emudecode.h"
-#define INSTRUCTION_LENGTH 32
 #include"emuutils.h"
+#define INSTRUCTION_LENGTH 32
+
+//extract bits of the Instruction and return decimal value
 uint32_t extract_code(uint32_t code, uint32_t lower_bit, uint32_t upper_bit) {
+
+//convert the decimal instruction into binary
     uint32_t *binary = convertToBinary(code);
 
     uint32_t size = upper_bit - lower_bit + 1;
     int32_t result[size];
 
+//extract requested bits
     for (int i = 0; i < size; ++i) {
         result[i] = binary[INSTRUCTION_LENGTH - upper_bit - 1 + i];
     }
 
-    return convertToDecimal(result, size);
+//return decimal value of requested bits
+    return (uint32_t) convertToDecimal(result, size);
 }
 
+//decode the first four bits, the condition part
 void decode_cond_instruction(uint32_t code, Instruction_t *ins) {
     assert(ins);
 
@@ -27,6 +34,7 @@ void decode_cond_instruction(uint32_t code, Instruction_t *ins) {
     ins->cond = ((((((ins->n << 1)|ins->z)) << 1)|ins->c) << 1) | ins->v;
 }
 
+//decode data processing according to the spec
 void decode_data_processing(uint32_t code, Instruction_t *ins) {
     assert(ins);
     assert(ins->instruction_type == DATA_PROCESSING);
@@ -42,7 +50,8 @@ void decode_data_processing(uint32_t code, Instruction_t *ins) {
         ins->rotate = extract_code(code, ROTATE_LOWER_BIT, ROTATE_UPPER_BIT);
         ins->imm = extract_code(code, BIT_ZERO, IMMEDIATE_UPPER_BIT);
     } else {
-        if (extract_code(code, BIT_FOUR, BIT_FOUR)) {
+        ins->o = extract_code(code, BIT_FOUR, BIT_FOUR);
+        if (ins->o) {
             ins->rs = extract_code(code, RS_LOWER_BIT, RS_UPPER_BIT);
         } else {
             ins->shift_constant = extract_code(code, SC_LOWER_BIT, SC_UPPER_BIT);
@@ -52,6 +61,7 @@ void decode_data_processing(uint32_t code, Instruction_t *ins) {
     }
 }
 
+//decode multiply according to the spec
 void decode_multiply(uint32_t code, Instruction_t *ins) {
     assert(ins);
     assert(ins->instruction_type == MULTIPLY);
@@ -66,6 +76,7 @@ void decode_multiply(uint32_t code, Instruction_t *ins) {
 
 }
 
+//decode single data transfer according to the spec
 void decode_single_data_transfer(uint32_t code, Instruction_t *ins){
     assert(ins);
     assert(ins->instruction_type == SINGLE_DATA_TRANSFER);
@@ -86,6 +97,7 @@ void decode_single_data_transfer(uint32_t code, Instruction_t *ins){
 
 }
 
+//decode branch according to the spec
 void decode_branch(uint32_t code, Instruction_t *ins){
     assert(ins);
     assert(ins->instruction_type == BRANCH);

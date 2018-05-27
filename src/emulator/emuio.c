@@ -8,8 +8,10 @@
 #define BYTES_FOR_INT 4
 #define ZERO 0
 #define ONE 1
+
 int32_t convert(char *buffer, uint32_t *address);
 
+//read file
 uint32_t *emuread(char *fileName, size_t *size) {
 
     FILE *file;
@@ -17,6 +19,7 @@ uint32_t *emuread(char *fileName, size_t *size) {
     char *buffer;
     unsigned long lengthFile;
 
+//open file to read it
     file = fopen(fileName, "rb");
 
     assert(file != NULL);
@@ -28,7 +31,8 @@ uint32_t *emuread(char *fileName, size_t *size) {
 
     fseek(file, 0, SEEK_END);
     lengthFile = (unsigned long) ftell(file);
-
+    
+//check length file is multiple of 32 Bits
     assert(lengthFile % INSTRUCTION_LENGTH == 0);
 
     fseek(file, 0, SEEK_SET);
@@ -49,19 +53,22 @@ uint32_t *emuread(char *fileName, size_t *size) {
    
     *size = lengthFile / INSTRUCTION_LENGTH;
     uint32_t *address = calloc(*size,sizeof(uint32_t));
+    
+//convert binary instructions in decimal values
     convert(buffer, address);
 
     free(buffer);
     return address;
 }
 
+//convert binary instructions in decimal values
 int32_t convert(char *buffer, uint32_t *address) {
     int x = 0;
     int y = 0;
 
-
+    
     while (buffer[y] != EOF) {
-        int decimal = 0;
+        uint32_t decimal = 0;
         int power = INSTRUCTION_LENGTH - 1;
         for (int i = 0; i < INSTRUCTION_LENGTH; ++i) {
             assert(buffer[y] == ZERO || buffer[y] == ONE);
@@ -78,10 +85,12 @@ int32_t convert(char *buffer, uint32_t *address) {
     return 0;
 }
 
+//write in stdout
 void emuwrite(Storage_t *storage) {
 
     assert(storage != NULL);
-
+    
+//print registers' contents    
     printf("Registers:\n");
 
     for (int i = 0; i < 13; i++) {
@@ -92,10 +101,11 @@ void emuwrite(Storage_t *storage) {
     printf("PC");
     printf(": %10d (0x%08x)\n", storage->reg[PC_REG], storage->reg[PC_REG]);
 
-//  PART I: initialize the CPSR to 0
     printf("CPSR");
     printf(": %10d (0x%08x)\n", storage->reg[CPSR_REG], storage->reg[CPSR_REG]);
 
+    
+//print Non-zero memory location's content
     printf("Non-zero memory location: \n");
     for (int i = 0; i < MEMORY_SIZE; i += BYTES_FOR_INT) {
         if (((int *) storage->mem)[i / BYTES_FOR_INT] != 0) {
