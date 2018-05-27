@@ -8,6 +8,7 @@
 
 #define INSTRUCTION_LENGTH 32
 
+// calculate two to the power of "power"
 int32_t powerOfTwo(int power) {
 
     int32_t result = 1;
@@ -19,7 +20,7 @@ int32_t powerOfTwo(int power) {
 
 }
 
-
+//convert decimal to binary
 uint32_t *convertToBinary(uint32_t code) {
 
     static uint32_t binary[INSTRUCTION_LENGTH];
@@ -35,6 +36,7 @@ uint32_t *convertToBinary(uint32_t code) {
     return binary;
 }
 
+//convert binary to decimal
 int32_t convertToDecimal(int32_t *code, int32_t size) {
     assert(code);
 

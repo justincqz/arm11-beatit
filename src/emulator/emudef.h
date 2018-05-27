@@ -1,8 +1,6 @@
 #ifndef EMUDEF_H
 #define EMUDEF_H
 
-#include"emustruct.h"
-
 #define NUMBERS_OF_REG 20
 #define MEMORY_SIZE  65540
 #define PC_REG 15
