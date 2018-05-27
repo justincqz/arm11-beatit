@@ -119,7 +119,7 @@ void add(uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr, uint32_t s) {
 void tst(uint32_t a, uint32_t b, int32_t *cpsr, uint32_t s) {
 
     if (s) {
-        change_cpsr(a & s, cpsr, -1);
+        change_cpsr(a & b, cpsr, -1);
     }
 }
 
