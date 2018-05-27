@@ -1,6 +1,7 @@
 #ifndef EMUDEF_H
 #define EMUDEF_H
 
+#include"emustruct.h"
 
 #define NUMBERS_OF_REG 20
 #define MEMORY_SIZE  65540
@@ -19,9 +20,6 @@
 #define MULTIPLY_FIRST_BIT_UPPER 7
 #define MULTIPLY_SECOND_BIT_LOWER 22
 #define MULTIPLY_SECOND_BIT_UPPER 25
-
-
-
 
 typedef enum {
 	DATA_PROCESSING = 0,
