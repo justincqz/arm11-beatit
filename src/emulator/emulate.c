@@ -4,28 +4,30 @@
 #include"emuio.h"
 #include"pipeline.h"
 
+/*TODO: error report*/
 int main(int argc, char **argv) {
-	
-	/* add try catch to avoid errors*/
 
-	int *instructions = malloc(sizeof(int)); /*need to redo*/
-  	int lines = emuread(argv[1], instructions);
-	Storage_t *storage = malloc(sizeof(Storage_t));
-	State_t *state = newState(storage,instructions,lines);
-	
-	while(1) {
-		fetch(state);
-		decode(state);
-		if(state->isTerminated) {
-			emuwrite(state->storage);
-			break;
-		}
-		execute(state);
-	}
-
-	assert(state->isTerminated);
-	free(instructions);
-	free(storage);
-	free(state);
-	return 0;
+    /*read*/
+    size_t lines;
+    uint32_t *instructions = emuread(argv[1], &lines); 
+    assert(instructions);
+    Storage_t *storage = new_storage();
+    State_t *state = new_state(storage,instructions,lines);
+    assert(storage);
+    assert(state);
+    
+    /*pipeline loop*/
+    assert(!state->isTerminated);
+    while(!state->isTerminated) {
+        pipeline_circle(state);
+    }
+    
+    /*output result*/
+    emuwrite(state->storage);
+    
+    /*free memories*/
+    free(instructions);
+    free(storage);
+    free(state);
+    return 0;
 }

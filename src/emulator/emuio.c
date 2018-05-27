@@ -1,21 +1,16 @@
-//
-
-// Created by Yoram Boccia on 24/05/2018.
-//
-#include "emuio.h"
-
-#include <stdio.h>
-#include "emuutils.h"
-
+#include<stdio.h>
+#include<stdint.h>
+#include<assert.h>
+#include<stdlib.h>
 #include"emustruct.h"
-#include <stdlib.h>
-#include <math.h>
-#include <stdint.h>
-#include <assert.h>
-#include <ctype.h>
-#include "emudef.h"
+#include"emuio.h"
+#define INSTRUCTION_LENGTH 32
+#define BYTES_FOR_INT 4
+#define ZERO 0
+#define ONE 1
+int32_t convert(char *buffer, uint32_t *address);
 
-int32_t emuread(char *fileName, int32_t *address) {
+uint32_t *emuread(char *fileName, size_t *size) {
 
     FILE *file;
 
@@ -51,15 +46,16 @@ int32_t emuread(char *fileName, int32_t *address) {
     fread(buffer, lengthFile, 1, file);
     fclose(file);
 
+   
+    *size = lengthFile / INSTRUCTION_LENGTH;
+    uint32_t *address = calloc(*size,sizeof(uint32_t));
     convert(buffer, address);
 
     free(buffer);
-
-    return (int32_t) (lengthFile / INSTRUCTION_LENGTH);
-
+    return address;
 }
 
-int32_t convert(char *buffer, int32_t *address) {
+int32_t convert(char *buffer, uint32_t *address) {
     int x = 0;
     int y = 0;
 

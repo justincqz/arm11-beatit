@@ -1,49 +1,13 @@
-#include <math.h>
-#include <assert.h>
-#include "emustruct.h"
-#include "emuio.h"
-#include "emudecode.h"
-#include "emuutils.h"
+#include<stdint.h>
+#include<assert.h>
+#include"emustruct.h"
+#include"emudecode.h"
+#define INSTRUCTION_LENGTH 32
+#include"emuutils.h"
+uint32_t extract_code(uint32_t code, uint32_t lower_bit, uint32_t upper_bit) {
+    uint32_t *binary = convertToBinary(code);
 
-#define COND_N_BIT 31
-#define COND_Z_BIT 30
-#define COND_C_BIT 29
-#define COND_V_BIT 28
-#define OPCODE_LOWER_BIT 21
-#define OPCODE_UPPER_BIT 21
-#define I_BIT 25
-#define P_BIT 24
-#define U_BIT 23
-#define A_BIT 21
-#define S_BIT 20
-#define RN_LOWER_BIT 16
-#define RN_UPPER_BIT 19
-#define RN_MULTIPLY_LOWER_BIT 12
-#define RN_MULTIPLY_UPPER_BIT 15
-#define RD_MULTIPLY_LOWER_BIT 16
-#define RD_MULTIPLY_UPPER_BIT 19
-#define RD_LOWER_BIT 12
-#define RD_UPPER_BIT 15
-#define RS_LOWER_BIT 8
-#define RS_UPPER_BIT 11
-#define SC_LOWER_BIT 7
-#define SC_UPPER_BIT 11
-#define ST_LOWER_BIT 5
-#define ST_UPPER_BIT 6
-#define ROTATE_LOWER_BIT 8
-#define ROTATE_UPPER_BIT 11
-#define RM_LOWER_BIT 0
-#define RM_UPPER_BIT 3
-#define BIT_ZERO 0
-#define BIT_FOUR 4
-#define ADDRESS_UPPER_BIT 23
-#define IMMEDIATE_UPPER_BIT 7
-
-
-int32_t extract_code(int32_t code, int32_t lower_bit, int32_t upper_bit) {
-    int32_t *binary = convertToBinary(code);
-
-    int32_t size = upper_bit - lower_bit + 1;
+    uint32_t size = upper_bit - lower_bit + 1;
     int32_t result[size];
 
     for (int i = 0; i < size; ++i) {
@@ -53,16 +17,17 @@ int32_t extract_code(int32_t code, int32_t lower_bit, int32_t upper_bit) {
     return convertToDecimal(result, size);
 }
 
-void decode_cond_instruction(int32_t code, Instruction_t *ins) {
+void decode_cond_instruction(uint32_t code, Instruction_t *ins) {
     assert(ins);
 
-    ins->cond.n = extract_code(code, COND_N_BIT, COND_N_BIT);
-    ins->cond.z = extract_code(code, COND_Z_BIT, COND_Z_BIT);
-    ins->cond.c = extract_code(code, COND_C_BIT, COND_C_BIT);
-    ins->cond.v = extract_code(code, COND_V_BIT, COND_V_BIT);
+    ins->n = extract_code(code, COND_N_BIT, COND_N_BIT);
+    ins->z = extract_code(code, COND_Z_BIT, COND_Z_BIT);
+    ins->c = extract_code(code, COND_C_BIT, COND_C_BIT);
+    ins->v = extract_code(code, COND_V_BIT, COND_V_BIT);
+    ins->cond = ((((((ins->n << 1)|ins->z)) << 1)|ins->c) << 1) | ins->v;
 }
 
-void decode_data_processing(int32_t code, Instruction_t *ins) {
+void decode_data_processing(uint32_t code, Instruction_t *ins) {
     assert(ins);
     assert(ins->instruction_type == DATA_PROCESSING);
 
@@ -87,7 +52,7 @@ void decode_data_processing(int32_t code, Instruction_t *ins) {
     }
 }
 
-void decode_multiply(int32_t code, Instruction_t *ins) {
+void decode_multiply(uint32_t code, Instruction_t *ins) {
     assert(ins);
     assert(ins->instruction_type == MULTIPLY);
 
@@ -101,7 +66,7 @@ void decode_multiply(int32_t code, Instruction_t *ins) {
 
 }
 
-void decode_single_data_transfer(int32_t code, Instruction_t *ins){
+void decode_single_data_transfer(uint32_t code, Instruction_t *ins){
     assert(ins);
     assert(ins->instruction_type == SINGLE_DATA_TRANSFER);
 
@@ -121,7 +86,7 @@ void decode_single_data_transfer(int32_t code, Instruction_t *ins){
 
 }
 
-void decode_branch(int32_t code, Instruction_t *ins){
+void decode_branch(uint32_t code, Instruction_t *ins){
     assert(ins);
     assert(ins->instruction_type == BRANCH);
 
@@ -129,3 +94,4 @@ void decode_branch(int32_t code, Instruction_t *ins){
     ins->address = extract_code(code, BIT_ZERO, ADDRESS_UPPER_BIT);
 
 }
+

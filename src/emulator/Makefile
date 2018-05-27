@@ -7,18 +7,22 @@ CFLAGS  = -Wall -g -std=c99 -Werror -pedantic
 
 all: emulate
 
-emulate: pipeline.o emuio.o emustruct.o emudecode.o emuexecute.o emuutils.o
+emulate: pipeline.o emuio.o emustruct.o emudecode.o emuexecute.o alu.o shifter.o emuutils.o
 
 emulate.o: emuio.h emudef.h emustruct.h pipeline.h emudecode.h emuexecute.h
 
-emuio.o: emustruct.h
+emuio.o: emuio.h emustruct.h
 
-pipeline.o: emudef.h emustruct.h emudecode.h emuexecute.h
+pipeline.o: pipeline.h emudef.h emustruct.h emudecode.h emuexecute.h
 
-emudecode.o: emustruct.h
+emudecode.o: emudecode.h emustruct.h emuutils.h
 
-emuexecute.o: emustruct.h
+emuexecute.o: emuexecute.h emustruct.h
 
 emustruct.o: emustruct.h emudef.h
 
-emuutils.o: emuutils.h emuio.h
+alu.o: alu.h emustruct.h emudef.h
+
+shifter.o: shifter.h emustruct.h
+
+emuutils.o: emuutils.o emustruct.h emudef.h

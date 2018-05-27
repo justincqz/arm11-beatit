@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-int32_t *convertToBinary(int32_t code);
+uint32_t *convertToBinary(uint32_t code);
 
 int32_t convertToDecimal(int32_t *code, int32_t size);
 

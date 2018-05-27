@@ -6,6 +6,7 @@
 #include "emuutils.h"
 #include "emuio.h"
 
+#define INSTRUCTION_LENGTH 32
 
 int32_t powerOfTwo(int power) {
 
@@ -19,9 +20,9 @@ int32_t powerOfTwo(int power) {
 }
 
 
-int32_t *convertToBinary(int32_t code) {
+uint32_t *convertToBinary(uint32_t code) {
 
-    static int32_t binary[INSTRUCTION_LENGTH];
+    static uint32_t binary[INSTRUCTION_LENGTH];
 
     int i = INSTRUCTION_LENGTH - 1;
 

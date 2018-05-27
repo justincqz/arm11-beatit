@@ -48,4 +48,17 @@ typedef enum  {
 	AL = 14
 } Condition_Type;
 
+typedef enum {
+    AND = 0,
+    EOR = 1,
+    SUB = 2,
+    RSB = 3,
+    ADD = 4,
+    TST = 8,
+    TEQ = 9,
+    CMP = 10,
+    ORR = 12,
+    MOV = 13
+} Operation_Type;
+
 #endif
