@@ -8,13 +8,9 @@
 int main(int argc, char **argv) {
 
     /*read*/
-    size_t lines;
-    uint32_t *instructions = emuread(argv[1], &lines); 
-    assert(instructions);
-    Storage_t *storage = new_storage();
-    State_t *state = new_state(storage,instructions,lines);
-    assert(storage);
+    State_t *state = new_state();
     assert(state);
+	emuread(argv[1],state);
     
     /*pipeline loop*/
     assert(!state->isTerminated);
@@ -26,8 +22,6 @@ int main(int argc, char **argv) {
     emuwrite(state->storage);
     
     /*free memories*/
-    free(instructions);
-    free(storage);
-    free(state);
+	delete_state(state);
     return 0;
 }

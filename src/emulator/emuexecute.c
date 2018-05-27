@@ -19,7 +19,6 @@ void execute_data_processing(Instruction_t *ins,Storage_t *storage) {
     assert(ins);
     assert(storage);
     assert(ins->instruction_type == DATA_PROCESSING);
-    assert(ins->isDecoded);
     assert(ins->executable);
     
     int32_t *reg = storage->reg;
@@ -34,7 +33,6 @@ void execute_multiply(Instruction_t *ins,Storage_t *storage) {
     assert(ins);
     assert(storage);
     assert(ins->instruction_type == MULTIPLY);
-    assert(ins->isDecoded);
 
     int32_t *reg = storage-> reg;
     assert(reg);
@@ -51,7 +49,6 @@ void execute_single_data_transfer(Instruction_t *ins,Storage_t *storage){
     assert(ins);
     assert(storage);
     assert(ins->instruction_type == SINGLE_DATA_TRANSFER);
-    assert(ins->isDecoded);
     int32_t *reg = storage->reg;
     int32_t *mem = storage->mem;
     assert(reg);
@@ -73,7 +70,6 @@ void execute_branch(Instruction_t *ins,Storage_t *storage){
     assert(ins);
     assert(storage);
     assert(ins->instruction_type == BRANCH);
-    assert(ins->isDecoded);
     int32_t *reg = storage->reg;
     int32_t *mem = storage->mem;
     assert(reg);

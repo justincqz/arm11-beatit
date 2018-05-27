@@ -5,50 +5,39 @@
 #include"emustruct.h"
 #include"emuio.h"
 #define INSTRUCTION_LENGTH 32
+#define INSTRUCTION_BYTE 4
 #define BYTES_FOR_INT 4
 #define ZERO '0'
 #define ONE '1'
 uint32_t *convert(char *buffer, size_t *size);
 
-uint32_t *emuread(char *fileName, size_t *size) {
+void emuread(char *fileName, State_t *state) {
 
     FILE *file;
-
-    char *buffer;
-    unsigned long lengthFile;
-
+	size_t lengthFile;
     file = fopen(fileName, "rb");
-
     assert(file != NULL);
 
     if (!file) {
         fprintf(stderr, "Unable to open file %s", fileName);
-        return NULL;
+        return;
     }
 
     fseek(file, 0, SEEK_END);
     lengthFile = (unsigned long) ftell(file);
-
     fseek(file, 0, SEEK_SET);
+	
+	//printf("length of file is %ld\n", lengthFile);
+	size_t size = lengthFile/INSTRUCTION_BYTE;
+	assert(size <= MEMORY_SIZE);
+	state->instructions_size = size;
 
-    buffer = (char *) malloc(lengthFile + 1);
+	for (int i = 0; i < size; i++) {
+		fread(state->storage->mem+i, sizeof(uint32_t),1,file);	
+	}
 
-    assert(buffer != NULL);
-
-    if (!buffer) {
-        fprintf(stderr, "Memory error!");
-        fclose(file);
-        return NULL;
-    }
-
-    fread(buffer, lengthFile, 1, file);
-    fclose(file);
-
-  
-    uint32_t *address = convert(buffer, size);
-
-    free(buffer);
-    return address;
+	fclose(file);
+    return;
 }
 
 uint32_t *convert(char *buffer, size_t *size) {
@@ -80,6 +69,9 @@ uint32_t *convert(char *buffer, size_t *size) {
 			continue;
 		}
 		line_length++;
+		if (buffer[y] != ZERO && buffer[y] != ONE) {
+			putchar(buffer[y]);
+		}
 		assert(buffer[y] == ZERO || buffer[y] == ONE);
         assert(line_length <= INSTRUCTION_LENGTH);
 		if (buffer[y] == ONE) {
@@ -103,21 +95,25 @@ void emuwrite(Storage_t *storage) {
         printf(": %10d (0x%08x)\n", storage->reg[i], storage->reg[i]);
     }
 
-    printf("PC");
+    printf("PC  ");
     printf(": %10d (0x%08x)\n", storage->reg[PC_REG], storage->reg[PC_REG]);
 
 //  PART I: initialize the CPSR to 0
     printf("CPSR");
     printf(": %10d (0x%08x)\n", storage->reg[CPSR_REG], storage->reg[CPSR_REG]);
 
-    printf("Non-zero memory location: \n");
-    for (int i = 0; i < MEMORY_SIZE; i += BYTES_FOR_INT) {
-        if (((int *) storage->mem)[i / BYTES_FOR_INT] != 0) {
-            printf("0x%08x: 0x", i);
-            for (int j = 0; j < BYTES_FOR_INT; j++) {
-                printf("%02x", storage->mem[i + j]);
-            }
-            printf("\n");
+    printf("Non-zero memory: \n");
+    for (int i = 0; i < MEMORY_SIZE; i ++) {
+        if ( *(storage->mem + i) != 0) {
+			uint32_t value = *(storage->mem+i);
+			uint32_t t = 4;
+
+            printf("0x%08x: 0x", i*4);;
+			while(t--) {
+				printf("%02x", value & ((1<<8) - 1));
+				value >>= 8;
+			}
+			printf("\n");
         }
     }
 }

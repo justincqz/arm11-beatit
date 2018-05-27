@@ -1,14 +1,20 @@
 #include "emuio.h"
+
 #define maxn 10000
 
 int main(void) {
-	char *fileName = calloc(maxn,sizeof(char));
-	scanf("%s", fileName);
-	size_t size;
+	char *fileName = "add01.bin";
 
-	uint32_t *instructions = emuread(fileName, &size);
-	for (int i = 0; i < size; i ++) {
+	State_t *state = new_state();
+	emuread(fileName, state);
+
+	size_t size = state->instructions_size;
+	printf("size = %ld\n", size);
+	
+	uint32_t *instructions = (uint32_t *) (state->storage->mem);
+	for (int i = 0; i < size; i++) {
 		printf("%u\n", *(instructions + i)); 
 	}
+	free(state);
 }
 

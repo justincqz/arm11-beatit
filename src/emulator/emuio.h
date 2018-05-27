@@ -12,7 +12,7 @@
 #include <ctype.h>
 #include "emudef.h"
 
-uint32_t *emuread(char *file_direction, size_t *size);
+void emuread(char *file_direction, State_t *state);
 
 void emuwrite(Storage_t *storage);
 

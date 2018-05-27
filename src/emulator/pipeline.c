@@ -4,41 +4,46 @@
 #include"emudecode.h"
 #include"emuexecute.h"
 #include"pipeline.h"
+#include<string.h>
+
 #define PC_GAP 4
 #define PC_AHEAD 8
 
-Instruction_t *fetch(int32_t *pc_reg, uint32_t *instructions,uint32_t size) {
-    assert(pc_reg);
+void fetch(State_t *state) {
+	assert(state);
+	int32_t *pc_reg = state->storage->reg + PC_REG;
+	uint32_t *instructions = (uint32_t *) state->storage->mem;
+	uint32_t size = state->instructions_size;
+	assert(pc_reg);
     assert(instructions);
 	
 	/* be sure PC < size + 2, fetched two steps a head execute*/
     uint32_t pos = *pc_reg/PC_GAP;/*4*/
-    assert(pos < size + PC_AHEAD/PC_GAP);/*8*/
-    
-    /*Open an new instruction, all elements set to 0*/
-    Instruction_t *ins = new_instruction();
-    assert(ins);
+	assert(pos < size + PC_AHEAD/PC_GAP);/*8*/
+
 
     /*fetch the code from instructions*/
-    ins -> binary_code = *(instructions + pos);
-
-	/*marked as fetched*/
-    ins -> isFetched = 1;
-    return ins;
+    state->fetched_code = *(instructions + pos);
+    
+	/*marking*/
+	state->isFetched = 1;
+	return;
 }
 
-Instruction_t *decode(Instruction_t *ins) {
-    if(ins == NULL) {
-        return NULL;
-    }
-    assert(ins->isFetched);
+void decode(State_t *state) {
+	if(!state->isFetched) {
+		return;
+	}
 	
-    uint32_t code = ins -> binary_code;
+	Instruction_t *ins = state->decoded_ins;
+	assert(ins);
+	memset(ins,0,sizeof(*ins));
+
     Instruction_Type *ins_type = &(ins->instruction_type);
     assert(ins_type);
 
-  
 	/*try to figure out the ins type*/
+	uint32_t code = state->fetched_code;
 	*ins_type = get_ins_type(code);
     
 	/*allocate the different instruction type to different implementation*/
@@ -60,29 +65,36 @@ Instruction_t *decode(Instruction_t *ins) {
     }
 	
 	/*mark ins as decoded*/
-    ins -> isDecoded = 1;
-    return ins;
+    state -> isDecoded = 1;
+    return;
 }
 
-Instruction_t *execute(Instruction_t *ins, Storage_t *storage) {
-    if(ins == NULL) {
-        return NULL;
-    }
+void execute(State_t *state) {
+	if (!state->isDecoded) {
+		return;
+	}
+
+    Instruction_t *ins = state->decoded_ins;
+	assert(ins);
     
-    int32_t *cpsr = storage->reg + CPSR_REG;
+    int32_t *cpsr = state->storage->reg + CPSR_REG;
     assert(cpsr);
     uint32_t cpsr_value 
         = extract_code((uint32_t) *cpsr, CPSR_BIT_LOWER, CPSR_BIT_UPPER);
 	
 	/*if ins condition not equal to cpsr condition, return
 	 otherwise, mark ins executable*/
-    if (ins->cond != cpsr_value) {
-        return 0;
-    }
-    ins->executable = 1;
+    if (ins->cond == cpsr_value || ins->cond == AL) {
+		ins->executable = 1;
+    } else {
+   	 	ins->executable = 0;
+		return;
+	}
 	
+
 	/*alloctate executaion to different types*/
-    switch (ins->instruction_type) {
+    Storage_t *storage = state->storage;
+	switch (ins->instruction_type) {
         case DATA_PROCESSING: 
             execute_data_processing(ins, storage);
             break;
@@ -98,42 +110,40 @@ Instruction_t *execute(Instruction_t *ins, Storage_t *storage) {
         case TERMINATION: 
             break;
     }
-    ins -> isExecuted = 1;
-    return ins;
+
+    return;
 }
 
 int32_t pipeline_circle(State_t *state) {
-    assert(state);
-    Storage_t *storage = state->storage;
-    assert(storage);
-    int32_t *pc_reg = (storage->reg) + PC_REG;
-    assert(pc_reg);
-
+    assert(state);    
     /*Execute decoded*/
-    Instruction_t *ins = execute(state->decoded_ins, state->storage);
-    assert(ins);
-    
-    /*BRANCH: clear pipeline stage
+    execute(state);
+	
+  	
+	/*BRANCH: clear pipeline stage
       TERMINATTION: mark terminate and get out*/
-    switch(ins->instruction_type) {
-        case BRANCH:
-            state->decoded_ins = NULL;
-            state->fetched_ins = NULL;
-            break;
-        case TERMINATION:
-            state->isTerminated = 1;
-            return 1;
-        default:
-            break;
-    }
+	Instruction_t *ins = state->decoded_ins;
+	if (ins->instruction_type == BRANCH && ins->executable) {
+           	memset(ins,0,sizeof(*ins));
+           	state->fetched_code = 0;
+			state->isFetched = 0;
+			state->isDecoded = 0;
+			return 0;
+	} 
+	
+	if(ins->instruction_type == TERMINATION) {
+    	state->isTerminated = 1;
+        return 1;
+   	}
     
     /*Decode fetched*/
-    state->decoded_ins = decode(state->fetched_ins);   
+    decode(state);   
     
     /*Fetch PC*/
-    state->fetched_ins = fetch(pc_reg, state->instructions, state->instructions_size);
+    fetch(state);
     
     /*PC = PC + 1*/
+	int32_t *pc_reg = state->storage->reg + PC_REG;
     *pc_reg += PC_GAP;
     return 0;
 }

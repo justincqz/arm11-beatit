@@ -3,7 +3,7 @@
 #include"emustruct.h"
 #include"emudef.h"
 typedef uint32_t U;
-#define SIZE 1000
+#define SIZE 1000000
 
 void check_value_range(Instruction_t *ins) {
 	assert(ins->cond <= (1<<4) -1);
@@ -38,14 +38,16 @@ void check_value_range(Instruction_t *ins) {
 }
 
 int main(void) {
-	U original_code;
 	U i = 0;
+	U *inss = calloc(SIZE,sizeof(U));
+	State_t *state = new_state(inss,SIZE);
+	
 	while(i++ < SIZE) {
-		original_code = rand();
-		Instruction_t *ins = new_instruction();
-		ins->binary_code = original_code;
-		ins->isFetched = 1;
-		decode(ins);
-		check_value_range(ins);
+		state->fetched_code = rand();
+		state->isFetched = 1;
+		decode(state);
+		check_value_range(state->decoded_ins);
 	}
+
+	delete_state(state);
 }
