@@ -6,10 +6,12 @@
 #include"emuio.h"
 #define INSTRUCTION_LENGTH 32
 #define BYTES_FOR_INT 4
-#define ZERO '0'
-#define ONE '1'
-uint32_t *convert(char *buffer, size_t *size);
+#define ZERO 0
+#define ONE 1
 
+int32_t convert(char *buffer, uint32_t *address);
+
+//read file
 uint32_t *emuread(char *fileName, size_t *size) {
 
     FILE *file;
@@ -17,17 +19,21 @@ uint32_t *emuread(char *fileName, size_t *size) {
     char *buffer;
     unsigned long lengthFile;
 
+//open file to read it
     file = fopen(fileName, "rb");
 
     assert(file != NULL);
 
     if (!file) {
         fprintf(stderr, "Unable to open file %s", fileName);
-        return NULL;
+        return 0;
     }
 
     fseek(file, 0, SEEK_END);
     lengthFile = (unsigned long) ftell(file);
+    
+//check length file is multiple of 32 Bits
+    assert(lengthFile % INSTRUCTION_LENGTH == 0);
 
     fseek(file, 0, SEEK_SET);
 
@@ -38,64 +44,53 @@ uint32_t *emuread(char *fileName, size_t *size) {
     if (!buffer) {
         fprintf(stderr, "Memory error!");
         fclose(file);
-        return NULL;
+        return 0;
     }
 
     fread(buffer, lengthFile, 1, file);
     fclose(file);
 
-  
-    uint32_t *address = convert(buffer, size);
+   
+    *size = lengthFile / INSTRUCTION_LENGTH;
+    uint32_t *address = calloc(*size,sizeof(uint32_t));
+    
+//convert binary instructions in decimal values
+    convert(buffer, address);
 
     free(buffer);
     return address;
 }
 
-uint32_t *convert(char *buffer, size_t *size) {
+//convert binary instructions in decimal values
+int32_t convert(char *buffer, uint32_t *address) {
     int x = 0;
     int y = 0;
-	*size = 1;
 
-	while(buffer[y]) {
-		*size += (buffer[y] == '\n');
-		y ++;
-	}
-
-
-	uint32_t *address = calloc(*size, sizeof(uint32_t));
-	
-	y = 0;
-	int line_length = 0;
-	int decimal = 0;
-	int power = INSTRUCTION_LENGTH - 1;
-    while (buffer[y]) {
-		if (buffer[y] == '\n') {
-			assert(line_length == INSTRUCTION_LENGTH);
-			address[x] = decimal;
-			x++;
-			decimal = 0;
-			power = INSTRUCTION_LENGTH - 1;
-			line_length = 0;
-			y++;
-			continue;
-		}
-		line_length++;
-		assert(buffer[y] == ZERO || buffer[y] == ONE);
-        assert(line_length <= INSTRUCTION_LENGTH);
-		if (buffer[y] == ONE) {
-        	decimal += powerOfTwo(power);
+    
+    while (buffer[y] != EOF) {
+        uint32_t decimal = 0;
+        int power = INSTRUCTION_LENGTH - 1;
+        for (int i = 0; i < INSTRUCTION_LENGTH; ++i) {
+            assert(buffer[y] == ZERO || buffer[y] == ONE);
+            if (buffer[y] == ONE) {
+                decimal += powerOfTwo(power);
+            }
+            y++;
+            power--;
         }
-        y++;
-        power--;
+        address[x] = decimal;
+        x++;
     }
 
-    return address;
+    return 0;
 }
 
+//write in stdout
 void emuwrite(Storage_t *storage) {
 
     assert(storage != NULL);
-
+    
+//print registers' contents    
     printf("Registers:\n");
 
     for (int i = 0; i < 13; i++) {
@@ -106,10 +101,11 @@ void emuwrite(Storage_t *storage) {
     printf("PC");
     printf(": %10d (0x%08x)\n", storage->reg[PC_REG], storage->reg[PC_REG]);
 
-//  PART I: initialize the CPSR to 0
     printf("CPSR");
     printf(": %10d (0x%08x)\n", storage->reg[CPSR_REG], storage->reg[CPSR_REG]);
 
+    
+//print Non-zero memory location's content
     printf("Non-zero memory location: \n");
     for (int i = 0; i < MEMORY_SIZE; i += BYTES_FOR_INT) {
         if (((int *) storage->mem)[i / BYTES_FOR_INT] != 0) {

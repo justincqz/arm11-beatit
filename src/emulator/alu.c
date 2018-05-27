@@ -3,6 +3,7 @@
 #define Z_BIT 30
 #define N_BIT 31
 #define C_BIT 29
+#define V_BIT 28
 #define UNSIGNED_INT_MAX ~0
 
 //execute alu according to the opcode and the spec, and update the cpsr
@@ -56,13 +57,18 @@ void alu_execute(Operation_Type opcode, uint32_t arg1, uint32_t arg2, int32_t *d
 //update the cpsr according to the spec
 void change_cpsr(int32_t a, int32_t *cpsr, int32_t c) {
     assert(cpsr);
+    uint32_t tmp = (uint32_t) *cpsr;
+	uint32_t ua = (uint32_t) a;
 
+    uint32_t n = (ua >> N_BIT);
+    uint32_t z = (ua == 0);
+    c = c == -1? ((tmp & (1 << C_BIT)) != 0): c;
+    uint32_t v = ((tmp & (1U << V_BIT)) != 0); 
+    uint32_t nzcv = (((((n << 1)|z) << 1)|c) << 1 |v);
 //check if there is overflow and update accordingly the C bit
-    if (c != 1) {
-        *cpsr = c ? (*cpsr | 1 << C_BIT) : ((*cpsr & ~(1 << C_BIT)));
-    }
-    *cpsr = a ? (*cpsr & ~(1 << Z_BIT)) : (*cpsr | (1 << Z_BIT));
-    *cpsr |= a & (1 << N_BIT);
+
+    tmp = (nzcv << V_BIT)|((tmp << 4) >> 4);
+    *cpsr = (int32_t) tmp;
 }
 
 //exercute opcode: and
@@ -88,11 +94,15 @@ void eor(uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr, uint32_t s) {
 //exercute opcode: sub
 void sub(uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr, uint32_t s) {
     assert(d);
+	int32_t aa = (int32_t) a;
+	int32_t bb = (int32_t) -b;
 
     *d = a - b;
     if (s) {
 //update che cspr and check for overflow
-        change_cpsr(*d, cpsr, a < b);
+		uint32_t c = (aa > 0 && bb > 0 && aa+bb < 0)
+					||(aa < 0 && bb < 0 && aa+bb >0); 
+        change_cpsr(*d, cpsr, c);
     }
 }
 
@@ -108,10 +118,14 @@ void add(uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr, uint32_t s) {
     assert(d);
 
     *d = a + b;
-    if (s) {
+	int32_t aa = (int32_t) a;
+	int32_t bb = (int32_t) b;
 
+    if (s) {
 //update the cspr and checking for overflow
-        change_cpsr(*d, cpsr, b > UNSIGNED_INT_MAX - a);
+        uint32_t c = (aa > 0 && bb > 0 && aa+bb < 0)
+					||(aa < 0 && bb < 0 && aa+bb >0); 
+        change_cpsr(*d, cpsr, c);
     }
 }
 
@@ -133,9 +147,14 @@ void teq(uint32_t a, uint32_t b, int32_t *cpsr, uint32_t s) {
 
 //exercute opcode: cmp
 void cmp(uint32_t a, uint32_t b, int32_t *cpsr, uint32_t s) {
+	int32_t aa = (int32_t) a;
+	int32_t bb = (int32_t) -b;
 
     if (s) {
-        change_cpsr(a - b, cpsr, a < b);
+//update che cspr and check for overflow
+		uint32_t c = (aa > 0 && bb > 0 && aa+bb < 0)
+					||(aa < 0 && bb < 0 && aa+bb >0); 
+        change_cpsr(a-b, cpsr, c);
     }
 }
 
@@ -151,15 +170,9 @@ void orr(uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr, uint32_t s) {
     }
 }
 
-//exercute opcode: mov
+//exercute opcode: mov TODO: s is not used
 void mov(int32_t a, int32_t *d, int32_t *cpsr, uint32_t s) {
     assert(d);
-
     *d = a;
-
-    if (s) {
-        change_cpsr(a, cpsr, -1);
-    }
-
 }
 
