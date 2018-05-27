@@ -5,7 +5,15 @@ CFLAGS  = -Wall -g -std=c99 -Werror -pedantic
 
 .PHONY: all clean
 
-all: emulate testio testalu
+all: emulate testio testalu testshifter testdecode
+
+testdecode: pipeline.o emustruct.o emuexecute.o emudecode.o alu.o shifter.o emuutils.o
+
+testdecode.o: pipeline.h emustruct.h emudef.h
+
+testshifter: shifter.o
+
+testshifter.o: emudef.h shifter.h
 
 testalu: alu.o
 

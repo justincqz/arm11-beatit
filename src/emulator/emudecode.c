@@ -90,10 +90,14 @@ void decode_single_data_transfer(uint32_t code, Instruction_t *ins){
     ins->rd = extract_code(code, RD_LOWER_BIT, RD_UPPER_BIT);
 
     if (ins->i) {
-        ins->rs = extract_code(code, BIT_ZERO, RS_UPPER_BIT);
+        ins->rs = extract_code(code, RS_LOWER_BIT, RS_UPPER_BIT);
+		ins->shift_type = (Shift_Type) extract_code(code, ST_LOWER_BIT, ST_UPPER_BIT);
+
     } else {
         ins->imm = extract_code(code, BIT_ZERO, RS_UPPER_BIT);
     }
+
+
 
 }
 

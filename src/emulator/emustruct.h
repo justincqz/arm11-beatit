@@ -27,7 +27,6 @@ typedef struct Instruction {
     uint32_t v;
     uint32_t i; /*Immediate Operand*/
     uint32_t s; /*Set Condition codes*/
-    uint32_t shift_flg;
     uint32_t opcode;
     uint32_t rn; /*First operand register*/
     uint32_t rd; /*Destination operand register*/
