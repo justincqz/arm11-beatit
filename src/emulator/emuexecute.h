@@ -1,6 +1,6 @@
 #ifndef EMUEXECUTE_H
 #define EMUEXECUTE_H
-
+#include"emudef.h"
 #include"emustruct.h"
 #include<assert.h>
 #define CPSR_BIT_LOWER 28
@@ -15,10 +15,10 @@
 uint32_t calculate_imm(Instruction_t *ins, int32_t *reg);
 uint32_t executable(Instruction_t *ins, int32_t *cpsr);
 
-void execute_data_processing(Instruction_t *ins, Storage_t *storage);
-void execute_multiply(Instruction_t *ins, Storage_t *storage);
-void execute_single_data_transfer(Instruction_t *ins, Storage_t *storage);
-void execute_branch(Instruction_t *ins, Storage_t *storage);
+Error execute_data_processing(State_t *state);
+Error execute_multiply(State_t *state);
+Error execute_single_data_transfer(State_t *state);
+Error execute_branch(State_t *state);
 
 #endif
 

@@ -33,7 +33,7 @@ pipeline.o: pipeline.h emudef.h emustruct.h emudecode.h emuexecute.h
 
 emudecode.o: emudecode.h emustruct.h emuutils.h
 
-emuexecute.o: emuexecute.h emustruct.h
+emuexecute.o: emuexecute.h emustruct.h emudef.h
 
 emustruct.o: emustruct.h emudef.h
 
