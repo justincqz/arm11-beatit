@@ -40,50 +40,6 @@ void emuread(char *fileName, State_t *state) {
     return;
 }
 
-uint32_t *convert(char *buffer, size_t *size) {
-    int x = 0;
-    int y = 0;
-	*size = 1;
-
-	while(buffer[y]) {
-		*size += (buffer[y] == '\n');
-		y ++;
-	}
-
-
-	uint32_t *address = calloc(*size, sizeof(uint32_t));
-	
-	y = 0;
-	int line_length = 0;
-	int decimal = 0;
-	int power = INSTRUCTION_LENGTH - 1;
-    while (buffer[y]) {
-		if (buffer[y] == '\n') {
-			assert(line_length == INSTRUCTION_LENGTH);
-			address[x] = decimal;
-			x++;
-			decimal = 0;
-			power = INSTRUCTION_LENGTH - 1;
-			line_length = 0;
-			y++;
-			continue;
-		}
-		line_length++;
-		if (buffer[y] != ZERO && buffer[y] != ONE) {
-			putchar(buffer[y]);
-		}
-		assert(buffer[y] == ZERO || buffer[y] == ONE);
-        assert(line_length <= INSTRUCTION_LENGTH);
-		if (buffer[y] == ONE) {
-        	decimal += powerOfTwo(power);
-        }
-        y++;
-        power--;
-    }
-
-    return address;
-}
-
 void emuwrite(Storage_t *storage) {
 
     assert(storage != NULL);
@@ -98,7 +54,6 @@ void emuwrite(Storage_t *storage) {
     printf("PC  ");
     printf(": %10d (0x%08x)\n", storage->reg[PC_REG], storage->reg[PC_REG]);
 
-//  PART I: initialize the CPSR to 0
     printf("CPSR");
     printf(": %10d (0x%08x)\n", storage->reg[CPSR_REG], storage->reg[CPSR_REG]);
 

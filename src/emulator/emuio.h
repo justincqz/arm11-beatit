@@ -3,7 +3,6 @@
 
 #include "emuio.h"
 #include <stdio.h>
-#include "emuutils.h"
 #include"emustruct.h"
 #include <stdlib.h>
 #include <math.h>

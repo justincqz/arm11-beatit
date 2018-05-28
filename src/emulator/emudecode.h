@@ -6,7 +6,6 @@
 #include "emustruct.h"
 #include "emuio.h"
 #include "emudecode.h"
-#include "emuutils.h"
 
 #define COND_N_BIT 31
 #define COND_Z_BIT 30

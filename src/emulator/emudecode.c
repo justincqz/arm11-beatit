@@ -2,8 +2,7 @@
 #include<assert.h>
 #include"emustruct.h"
 #include"emudecode.h"
-#include"emuutils.h"
-#define INSTRUCTION_LENGTH 32
+
 
 //extract bits of the Instruction and return decimal value
 inline uint32_t extract_code(register uint32_t code, register uint32_t lower_bit, register uint32_t upper_bit) {
