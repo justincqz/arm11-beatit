@@ -20,6 +20,11 @@
 #define MULTIPLY_SECOND_BIT_UPPER 25
 
 typedef enum {
+    FAILURE = -1,
+    SUCCESS = 0
+} Error;
+
+typedef enum {
 	DATA_PROCESSING = 0,
 	MULTIPLY = 3,
 	SINGLE_DATA_TRANSFER = 1,
