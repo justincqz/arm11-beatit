@@ -12,13 +12,8 @@ typedef struct Storage {
 
 
 typedef struct Instruction {
-    uint32_t isFetched;
-    uint32_t isDecoded;
     uint32_t executable;
-    uint32_t isExecuted;
-
     Instruction_Type instruction_type;
-    uint32_t binary_code;
 
     uint32_t cond; /*nzcv*/
     uint32_t n;
@@ -27,7 +22,6 @@ typedef struct Instruction {
     uint32_t v;
     uint32_t i; /*Immediate Operand*/
     uint32_t s; /*Set Condition codes*/
-    uint32_t shift_flg;
     uint32_t opcode;
     uint32_t rn; /*First operand register*/
     uint32_t rd; /*Destination operand register*/
@@ -49,15 +43,20 @@ typedef struct Instruction {
 
 typedef struct State {
     Storage_t *storage;
+	size_t instructions_size;
+	
+	uint32_t fetched_code;
+	Instruction_t *decoded_ins;
+	
+	uint32_t isFetched;
+	uint32_t isDecoded;
     uint32_t isTerminated;
-    uint32_t *instructions;
-    size_t instructions_size;
-    Instruction_t *fetched_ins;
-    Instruction_t *decoded_ins;
 } State_t;
 
-Storage_t *new_storage();
-State_t *new_state(Storage_t *storage, uint32_t *instructions, size_t size);
+
+State_t *new_state();
+void delete_state(State_t *state);
+
 Instruction_t *new_instruction();
 
 #endif

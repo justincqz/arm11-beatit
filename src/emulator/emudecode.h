@@ -13,7 +13,7 @@
 #define COND_C_BIT 29
 #define COND_V_BIT 28
 #define OPCODE_LOWER_BIT 21
-#define OPCODE_UPPER_BIT 21
+#define OPCODE_UPPER_BIT 24
 #define I_BIT 25
 #define P_BIT 24
 #define U_BIT 23
