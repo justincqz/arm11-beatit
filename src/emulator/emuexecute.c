@@ -14,22 +14,19 @@
 
 
 Error execute_data_processing(State_t *state) {
-    register int32_t *reg = state->storage->reg;
+    int32_t *reg = state->storage->reg;
     Instruction_t *ins = state->decoded_ins;
 
-    /*start_code*/   
-    register uint32_t a = reg[ins->rn];
-    register uint32_t b = calculate_imm(ins, reg);
-    
-    alu_execute(ins->opcode, a, b, reg + ins->rd, reg + CPSR_REG, ins->s);
+    alu_execute(ins->opcode, reg[ins->rn], calculate_imm(ins,reg)
+			, reg + ins->rd, reg + CPSR_REG, ins->s);
     return SUCCESS;
 }
 
 
 
 Error execute_multiply(State_t *state) {
-    register int32_t *reg = state->storage->reg;
-    register Instruction_t *ins = state->decoded_ins;
+    int32_t *reg = state->storage->reg;
+    Instruction_t *ins = state->decoded_ins;
     /*start code*/
     reg[ins->rd] = reg[ins->rm]*reg[ins->rs];
     reg[ins->rd] += ins->a? reg[ins->rs]: 0;
@@ -39,9 +36,9 @@ Error execute_multiply(State_t *state) {
 
 /*need to debug*/
 Error execute_single_data_transfer(State_t *state){
-    register int32_t *reg = state->storage->reg;
-    register int32_t *mem = state->storage->mem;
-    register Instruction_t *ins = state->decoded_ins;
+    int32_t *reg = state->storage->reg;
+    int32_t *mem = state->storage->mem;
+    Instruction_t *ins = state->decoded_ins;
 
     if(ins->rm == PC_REG || ins->rd == PC_REG) {
         printf("Invalid Instruction\n");
@@ -54,16 +51,16 @@ Error execute_single_data_transfer(State_t *state){
     }
 
     /*start code*/
-    register uint32_t offset = ins->imm;
+    uint32_t offset = ins->imm;
     if (ins->i) {
-        register uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
-        offset = shift(reg[ins->rm], gap, ins->shift_type, reg + CPSR_REG);
+        uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
+        offset = shift(reg[ins->rm], gap, ins->shift_type, reg + CPSR_REG, ins->s);
     
     }
     
 
 
-    register uint32_t mem_add = (uint32_t) reg[ins->rn];
+    uint32_t mem_add = (uint32_t) reg[ins->rn];
     if(ins->p) {
         if(ins->u) {
             mem_add += offset;
@@ -73,7 +70,7 @@ Error execute_single_data_transfer(State_t *state){
     }
     
 
-    register int32_t *location = (int32_t *) ((char *) mem + mem_add);
+     int32_t *location = (int32_t *) ((char *) mem + mem_add);
     /*need to recheck the bound*/ 
     if (location >= mem + MEMORY_SIZE) {
         printf("Error: Out of bounds memory access at address 0x%08x\n", mem_add);
@@ -99,30 +96,28 @@ Error execute_single_data_transfer(State_t *state){
    
 /*whether or not affect cpsr*/
 Error execute_branch(State_t *state){    
-    register int32_t *reg = state->storage->reg;
-    register Instruction_t *ins = state->decoded_ins;
+    int32_t *reg = state->storage->reg;
+    Instruction_t *ins = state->decoded_ins;
 
     /*start code*/
-    register int32_t offset = ins->address;
+    int32_t offset = ins->address;
     if ( offset & BRANCH_SIGNED_MASK) { /*1 << 23*/
         offset |= BRANCH_EXTENSION;/*((1 << 9) - 1) << 23*/
     }
     offset <<= 2;
     reg[PC_REG] += offset;
-    
     state->isFetched=0;
     state->isDecoded=0;
     ins->executable=0;
-
     return SUCCESS;
 }
 
 uint32_t calculate_imm(Instruction_t *ins, int32_t *reg) {
     if(ins->i) {
-        return shift ( (ins->imm), ins->rotate << 1, ROR, reg + CPSR_REG); /*need to check*/
+        return shift ( (ins->imm), ins->rotate << 1, ROR, reg + CPSR_REG,ins->s); /*need to check*/
     }
-    register uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
-    return shift(reg[ins->rm], gap, ins->shift_type, reg + CPSR_REG);
+     uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
+    return shift(reg[ins->rm], gap, ins->shift_type, reg + CPSR_REG,ins->s);
 }
 
 

@@ -7,11 +7,11 @@
 #define UNSIGNED_INT_MAX ~0
 
 //update the cpsr according to the spec
-void change_cpsr(register int32_t a, int32_t *cpsr,register int32_t c) {
+void change_cpsr(int32_t a, int32_t *cpsr,int32_t c) {
     //assert(cpsr);
-    register uint32_t tmp = (uint32_t) *cpsr;
-	register uint32_t ua = (uint32_t) a;
-    register uint32_t nzcv = (ua >> N_BIT);
+    uint32_t tmp = (uint32_t) *cpsr;
+	uint32_t ua = (uint32_t) a;
+    uint32_t nzcv = (ua >> N_BIT);
     nzcv <<= 1;
     nzcv |= (ua == 0);
     nzcv <<= 1;
@@ -23,10 +23,10 @@ void change_cpsr(register int32_t a, int32_t *cpsr,register int32_t c) {
 }
 
 //execute alu according to the opcode and the spec, and update the cpsr
-void alu_execute(Operation_Type opcode,register uint32_t a, register uint32_t b, int32_t *d, int32_t *cpsr,register uint32_t s) {
+void alu_execute(Operation_Type opcode,uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr,uint32_t s) {
     //assert(destination);
     //assert(cpsr);
-    register uint32_t dd,c;
+    uint32_t dd,c;
 
     switch(opcode) {
         case AND: 
@@ -76,6 +76,7 @@ void alu_execute(Operation_Type opcode,register uint32_t a, register uint32_t b,
             
         default: break;
     }
+
 
     if(s) {
         change_cpsr(dd,cpsr,c);
