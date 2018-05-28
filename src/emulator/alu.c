@@ -60,6 +60,7 @@ void alu_execute(Operation_Type opcode,register uint32_t a, register uint32_t b,
         case MOV:
             dd = *d = b;/*check*/
             c =  -1;
+            s = 0;
             break;
         case TST:
             dd = a&b;
