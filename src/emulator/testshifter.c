@@ -31,7 +31,7 @@ int main(void) {
 		tc = *cpsr;
 		c = b? (a >> (32-b) != 0): 0;
 		tc = tc| c*(1<<C_BIT);
-		r = shift(a,b,LSL,cpsr);
+		r = shift(a,b,LSL,cpsr,1);
 		assert(r == (a<<b));
 		/*
 		if (*cpsr != tc) {
@@ -51,7 +51,7 @@ int main(void) {
 		tc = *cpsr;
 		c = b ? (a << (32-b) != 0):0;
 		tc = tc| c*(1<<C_BIT);
-		r = shift(a,b,LSR,cpsr);
+		r = shift(a,b,LSR,cpsr,1);
 		assert(r == (a>>b));
 		assert(*cpsr == tc);
 
@@ -60,7 +60,7 @@ int main(void) {
 		tc = *cpsr;
 		c = b?(a << (32-b) != 0):0;
 		tc = tc| c*(1<<C_BIT);
-		r = shift(a,b,ASR,cpsr);
+		r = shift(a,b,ASR,cpsr,1);
 		assert((I)r == ((I)a>>b));
 		assert(*cpsr == tc);
 		
@@ -84,13 +84,13 @@ int main(void) {
 		U r6 = 2831555741;
 		U r24 = 2267507249;
 		
-		U rr1 = shift(a,b1,ROR,cpsr);
-		U rr2 = shift(a,b2,ROR,cpsr);
-		U rr3 = shift(a,b3,ROR,cpsr);
-		U rr4 = shift(a,b4,ROR,cpsr);
-		U rr5 = shift(a,b5,ROR,cpsr);
-		U rr6 = shift(a,b6,ROR,cpsr);
-		U rr24 = shift(a,b24,ROR,cpsr);
+		U rr1 = shift(a,b1,ROR,cpsr,1);
+		U rr2 = shift(a,b2,ROR,cpsr,1);
+		U rr3 = shift(a,b3,ROR,cpsr,1);
+		U rr4 = shift(a,b4,ROR,cpsr,1);
+		U rr5 = shift(a,b5,ROR,cpsr,1);
+		U rr6 = shift(a,b6,ROR,cpsr,1);
+		U rr24 = shift(a,b24,ROR,cpsr,1);
 		
 		assert(r1 == rr1);
 		assert(r2 == rr2);
