@@ -7,20 +7,10 @@
 
 //extract bits of the Instruction and return decimal value
 uint32_t extract_code(uint32_t code, uint32_t lower_bit, uint32_t upper_bit) {
-
-//convert the decimal instruction into binary
-    uint32_t *binary = convertToBinary(code);
-
-    uint32_t size = upper_bit - lower_bit + 1;
-    int32_t result[size];
-
-//extract requested bits
-    for (int i = 0; i < size; ++i) {
-        result[i] = binary[INSTRUCTION_LENGTH - upper_bit - 1 + i];
-    }
-
-//return decimal value of requested bits
-    return (uint32_t) convertToDecimal(result, size);
+    code <<= (31-upper_bit);
+    code >>= (31-upper_bit);
+    code >>= lower_bit;
+    return code;
 }
 
 //decode the first four bits, the condition part

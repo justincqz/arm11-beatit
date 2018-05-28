@@ -69,6 +69,33 @@ void decode(State_t *state) {
     return;
 }
 
+uint32_t check_condition(uint32_t cond, uint32_t nzcv) {    
+    uint32_t v = nzcv & 1;
+    nzcv >>= 1;
+    nzcv >>= 1;
+    uint32_t z = nzcv & 1;
+    nzcv >>= 1;
+    uint32_t n = nzcv & 1;
+
+    switch(cond) {
+        case EQ:
+            return z == 1;
+        case NE:
+            return z == 0;
+        case GE:
+            return n == v;
+        case LT:
+            return n != v;
+        case GT:
+            return !z && (n == v);
+        case LE:
+            return z || (n != v);
+        default:
+            return 1;
+    }
+
+}
+
 void execute(State_t *state) {
 	if (!state->isDecoded) {
 		return;
@@ -79,12 +106,11 @@ void execute(State_t *state) {
     
     int32_t *cpsr = state->storage->reg + CPSR_REG;
     assert(cpsr);
-    uint32_t cpsr_value 
+    uint32_t nzcv
         = extract_code((uint32_t) *cpsr, CPSR_BIT_LOWER, CPSR_BIT_UPPER);
 	
-	/*if ins condition not equal to cpsr condition, return
-	 otherwise, mark ins executable*/
-    if (ins->cond == cpsr_value || ins->cond == AL) {
+	/*chekc condition*/
+    if (check_condition(ins->cond, nzcv) ) {
 		ins->executable = 1;
     } else {
    	 	ins->executable = 0;

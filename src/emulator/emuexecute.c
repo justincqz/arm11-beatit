@@ -44,7 +44,7 @@ void execute_multiply(Instruction_t *ins,Storage_t *storage) {
 }
 
 
-/*whether or not affect cpsr*/
+/*need to debug*/
 void execute_single_data_transfer(Instruction_t *ins,Storage_t *storage){
     assert(ins);
     assert(storage);
@@ -54,15 +54,23 @@ void execute_single_data_transfer(Instruction_t *ins,Storage_t *storage){
     assert(reg);
     assert(mem);
     assert(ins->executable);
+    assert(ins->rm != PC_REG);
+    assert(ins->rd != PC_REG);
+    if (ins->p == 0) {
+        assert(ins->rm != ins->rn);
+    }
+
 
     uint32_t imm = calculate_imm(ins, reg);
-    reg[ins->rn] += ins->p? ((ins->u<<1) - 1)*imm: 0;
+    uint32_t tar = ins->p*((ins->u<<1)-1)*imm + reg[ins->rn];
+
     if (ins->l) {
-        reg[ins->rd] = mem[reg[ins->rn]];
+        reg[tar] = mem[ins->rd];
     } else {
-        mem[reg[ins->rn]] = reg[ins->rd];
+        mem[ins->rd] = reg[tar];
     }
-    reg[ins->rn] += ins->p? 0: ((ins->u<<1)-1)*imm;
+
+    reg[ins->rn] += ins->p? reg[ins->rn]: ((ins->u<<1)-1)*imm;
 }
 
 /*whether or not affect cpsr*/

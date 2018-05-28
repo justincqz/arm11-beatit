@@ -95,7 +95,7 @@ void eor(uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr, uint32_t s) {
 void sub(uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr, uint32_t s) {
     assert(d);
 
-    *d = a - b;
+    *d = (int32_t)a - (int32_t)b;
     if (s) {
 //update che cspr and check for overflow
 		uint32_t c = (a >= b); 
@@ -145,7 +145,7 @@ void cmp(uint32_t a, uint32_t b, int32_t *cpsr, uint32_t s) {
     if (s) {
 //update che cspr and check for overflow
 		uint32_t c = (a >= b); 
-        change_cpsr(a-b, cpsr, c);
+        change_cpsr((int32_t)a-(int32_t)b, cpsr, c);
     }
 }
 
