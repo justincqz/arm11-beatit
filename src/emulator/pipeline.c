@@ -6,14 +6,11 @@
 #include"pipeline.h"
 #include<string.h>
 
-#define PC_GAP 4
-#define PC_AHEAD 8
 
 void fetch(State_t *state) {
 	int32_t *pc_reg = state->storage->reg + PC_REG;
     state->fetched_code = *((uint32_t *)state->storage->mem + *pc_reg/PC_GAP);
 	state->isFetched = 1;
-	return;
 }
 
 void decode(State_t *state) {
@@ -25,7 +22,7 @@ void decode(State_t *state) {
     Instruction_Type *ins_type = &(ins->instruction_type);
 
 	/*try to figure out the ins type*/
-	*ins_type = get_ins_type(state->fetched_code);
+	*ins_type = (Instruction_Type) get_ins_type(state->fetched_code);
     
 	/*allocate the different instruction type to different implementation*/
     switch (*ins_type) {
@@ -46,7 +43,6 @@ void decode(State_t *state) {
     }
 	
     state -> isDecoded = 1;
-    return;
 }
 
 uint32_t check_condition(uint32_t cond,  uint32_t nzcv) {    
@@ -59,9 +55,9 @@ uint32_t check_condition(uint32_t cond,  uint32_t nzcv) {
 
     switch(cond) {
         case EQ:
-            return z == 1;
+            return z;
         case NE:
-            return z == 0;
+            return ~z;
         case GE:
             return n == v;
         case LT:

@@ -1,6 +1,3 @@
-//
-// Created by nathi on 29/05/2018.
-//
 
 #ifndef ARM11_11_OPERATIONS_H
 #define ARM11_11_OPERATIONS_H

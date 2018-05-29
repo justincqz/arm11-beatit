@@ -4,12 +4,8 @@
 #include"emudef.h"
 #include"emuexecute.h"
 #include"operations.h"
+#include "emudef.h"
 #include<stdio.h>
-#define BRANCH_SIGNED_MASK 1<<23
-#define BRANCH_EXTENSION ((1 << 9) - 1) << 23
-#define N_BIT 31
-#define Z_BIT 30
-
 
 
 Error execute_data_processing(State_t *state) {

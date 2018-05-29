@@ -2,6 +2,7 @@
 #include<assert.h>
 #include"emustruct.h"
 #include"emudecode.h"
+#include "emudef.h"
 
 
 //extract bits of the Instruction and return decimal value
@@ -86,8 +87,6 @@ void decode_single_data_transfer(State_t *state){
     } else {
         ins->imm = extract_code(code, BIT_ZERO, RS_UPPER_BIT);
     }
-
-
 
 }
 
