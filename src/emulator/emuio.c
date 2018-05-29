@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include"emustruct.h"
 #include"emuio.h"
+#include"emudef.h"
 
 void emuread(char *fileName, State_t *state) {
 
