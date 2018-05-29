@@ -3,13 +3,6 @@
 #include"emudef.h"
 #include<assert.h>
 
-#define Z_BIT 30
-#define N_BIT 31
-#define C_BIT 29
-#define V_BIT 28
-#define UNSIGNED_INT_MAX ~0
-#define WORD_BITS 32
-
 //update the cpsr according to the spec
 void change_cpsr(int32_t a, int32_t *cpsr,int32_t c) {
     //assert(cpsr);

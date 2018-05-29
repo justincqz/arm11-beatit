@@ -4,12 +4,6 @@
 #include<stdlib.h>
 #include"emustruct.h"
 #include"emuio.h"
-#define INSTRUCTION_LENGTH 32
-#define INSTRUCTION_BYTE 4
-#define BYTES_FOR_INT 4
-#define ZERO '0'
-#define ONE '1'
-uint32_t *convert(char *buffer, size_t *size);
 
 void emuread(char *fileName, State_t *state) {
 
@@ -37,7 +31,6 @@ void emuread(char *fileName, State_t *state) {
 	}
 
 	fclose(file);
-    return;
 }
 
 void emuwrite(Storage_t *storage) {

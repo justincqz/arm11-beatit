@@ -6,7 +6,6 @@
 #define PC_REG 15
 #define CPSR_REG 16
 #define TERMINATION_CODE 0
-#define PC_INCREMENT_GAP 4
 #define INSTRUCTION_LENGTH 32
 
 
@@ -19,6 +18,56 @@
 #define MULTIPLY_FIRST_BIT_UPPER 7
 #define MULTIPLY_SECOND_BIT_LOWER 22
 #define MULTIPLY_SECOND_BIT_UPPER 25
+
+#define COND_N_BIT 31
+#define COND_Z_BIT 30
+#define COND_C_BIT 29
+#define COND_V_BIT 28
+#define OPCODE_LOWER_BIT 21
+#define OPCODE_UPPER_BIT 24
+#define I_BIT 25
+#define P_BIT 24
+#define U_BIT 23
+#define A_BIT 21
+#define S_BIT 20
+#define RN_LOWER_BIT 16
+#define RN_UPPER_BIT 19
+#define RN_MULTIPLY_LOWER_BIT 12
+#define RN_MULTIPLY_UPPER_BIT 15
+#define RD_MULTIPLY_LOWER_BIT 16
+#define RD_MULTIPLY_UPPER_BIT 19
+#define RD_LOWER_BIT 12
+#define RD_UPPER_BIT 15
+#define RS_LOWER_BIT 8
+#define RS_UPPER_BIT 11
+#define SC_LOWER_BIT 7
+#define SC_UPPER_BIT 11
+#define ST_LOWER_BIT 5
+#define ST_UPPER_BIT 6
+#define ROTATE_LOWER_BIT 8
+#define ROTATE_UPPER_BIT 11
+#define RM_LOWER_BIT 0
+#define RM_UPPER_BIT 3
+#define BIT_ZERO 0
+#define BIT_FOUR 4
+#define ADDRESS_UPPER_BIT 23
+#define IMMEDIATE_UPPER_BIT 7
+
+#define BRANCH_SIGNED_MASK 1<<23
+#define BRANCH_EXTENSION ((1 << 9) - 1) << 23
+#define CPSR_BIT_LOWER 28
+
+#define CPSR_BIT_UPPER 31
+#define INSTRUCTION_BYTE 4
+
+#define BYTES_FOR_INT 4
+#define N_BIT 31
+#define C_BIT 29
+#define V_BIT 28
+#define UNSIGNED_INT_MAX ~0
+#define WORD_BITS 32
+#define PC_GAP 4
+
 
 typedef enum {
     FAILURE = -1,
