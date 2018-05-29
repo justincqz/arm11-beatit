@@ -4,7 +4,6 @@
 #include"emuio.h"
 #include"pipeline.h"
 
-/*TODO: error report*/
 int main(int argc, char **argv) {
 
     /*read*/

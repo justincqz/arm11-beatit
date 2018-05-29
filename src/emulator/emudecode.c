@@ -14,10 +14,10 @@ inline uint32_t extract_code(register uint32_t code, register uint32_t lower_bit
 
 //decode the first four bits, the condition part
 void decode_cond_instruction(register uint32_t code, Instruction_t *ins) {
-    ins->n = extract_code(code, COND_N_BIT, COND_N_BIT);
-    ins->z = extract_code(code, COND_Z_BIT, COND_Z_BIT);
-    ins->c = extract_code(code, COND_C_BIT, COND_C_BIT);
-    ins->v = extract_code(code, COND_V_BIT, COND_V_BIT);
+    ins->n = extract_code(code, N_BIT, N_BIT);
+    ins->z = extract_code(code, Z_BIT, Z_BIT);
+    ins->c = extract_code(code, C_BIT, C_BIT);
+    ins->v = extract_code(code, V_BIT, V_BIT);
     ins->cond = ((((((ins->n << 1)|ins->z)) << 1)|ins->c) << 1) | ins->v;
 }
 

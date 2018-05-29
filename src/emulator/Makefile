@@ -1,27 +1,29 @@
 CC      = gcc
 CFLAGS  = -Wall -g -std=c99 -Werror -pedantic
+BUILD   = emulate
 
-.SUFFIXES: .c .o
+all: $(BUILD)
 
-.PHONY: all clean
+clean:
+	rm *.o
 
-all: emulate testio testalu testshifter testdecode
+#testio testalu testshifter testdecode
 
-testdecode: pipeline.o emustruct.o emuexecute.o emudecode.o operations.o
+#testdecode: pipeline.o emustruct.o emuexecute.o emudecode.o operations.o
 
-testdecode.o: pipeline.h emustruct.h emudef.h
+#testdecode.o: pipeline.h emustruct.h emudef.h
 
-testshifter: operations.o
+#testshifter: operations.o
 
-testshifter.o: emudef.h operations.h
+#testshifter.o: emudef.h operations.h
 
-testalu: operations.o
+#testalu: operations.o
 
-testalu.o: emudef.h operations.h
+#testalu.o: emudef.h operations.h
 
-testio: emuio.o emustruct.o
+#testio: emuio.o emustruct.o
 
-testio.o: emuio.h
+#testio.o: emuio.h
 
 emulate: pipeline.o emuio.o emustruct.o emudecode.o emuexecute.o operations.o
 

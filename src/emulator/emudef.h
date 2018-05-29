@@ -1,8 +1,10 @@
 #ifndef EMUDEF_H
 #define EMUDEF_H
 
-#define NUMBERS_OF_REG 20
-#define MEMORY_SIZE  65540
+#define PI_LOWER_LOCATION 0x20200000
+#define PI_UPPER_LOCATION 0x20200008
+#define NUMBERS_OF_REG 17
+#define MEMORY_SIZE  65535
 #define PC_REG 15
 #define CPSR_REG 16
 #define TERMINATION_CODE 0
@@ -26,10 +28,10 @@
 #define MULTIPLY_SECOND_BIT_LOWER 22
 #define MULTIPLY_SECOND_BIT_UPPER 25
 
-#define COND_N_BIT 31
-#define COND_Z_BIT 30
-#define COND_C_BIT 29
-#define COND_V_BIT 28
+#define N_BIT 31
+#define Z_BIT 30
+#define C_BIT 29
+#define V_BIT 28
 #define OPCODE_LOWER_BIT 21
 #define OPCODE_UPPER_BIT 24
 #define I_BIT 25
@@ -60,7 +62,6 @@
 #define ADDRESS_UPPER_BIT 23
 #define IMMEDIATE_UPPER_BIT 7
 
-#define C_BIT 29
 #define WORD_BITS 32
 #define PC_GAP 4
 #define PC_AHEAD 8
@@ -69,10 +70,15 @@
 #define BRANCH_SIGNED_MASK 1<<23
 #define BRANCH_EXTENSION ((1 << 9) - 1) << 23
 
-#define Z_BIT 30
-#define N_BIT 31
-#define V_BIT 28
 #define UNSIGNED_INT_MAX ~0
+
+typedef enum {
+	GPIO0_9   = 0x20200000,
+	GPIO10_19 = 0x20200004,
+	GPIO20_29 = 0x20200008,
+	PIN_ON    = 0x2020001c,
+	PIN_OFF   = 0x20200028
+} Gpio;
 
 typedef enum {
     FAILURE = -1,

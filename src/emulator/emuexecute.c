@@ -7,8 +7,6 @@
 #include"operations.h"
 
 
-
-
 Error execute_data_processing(State_t *state) {
     int32_t *reg = state->storage->reg;
     Instruction_t *ins = state->decoded_ins;
@@ -69,12 +67,34 @@ Error execute_single_data_transfer(State_t *state){
      int32_t *location = (int32_t *) ((char *) mem + mem_add);
     /*need to recheck the bound*/ 
     if (location >= mem + MEMORY_SIZE) {
-        printf("Error: Out of bounds memory access at address 0x%08x\n", mem_add);
-        return FAILURE;
-    }
+		switch (mem_add) {
+			case GPIO0_9:
+				reg[ins->rd] = mem_add;
+				printf("One GPIO pin from 0 to 9 has been accessed\n");
+				break;
+			case GPIO10_19:
+				reg[ins->rd] = mem_add;
+				printf("One GPIO pin from 10 to 19 has been accessed\n");
+				break;
+			case GPIO20_29:
+				reg[ins->rd] = mem_add;
+				printf("One GPIO pin from 20 to 29 has been accessed\n");
+				break;
+			case PIN_ON:
+				printf("PIN ON\n");
+				return SUCCESS;
+			case PIN_OFF:
+				printf("PIN OFF\n");
+				return SUCCESS;
+			default:
+				printf("Error: Out of bounds memory access at address 0x%08x\n", mem_add);
+				return FAILURE;
+		}
+		return SUCCESS;
+	}
 
     if(ins -> l) {
-        reg[ins->rd] = *(location);
+		reg[ins->rd] = *(location);
     } else {
         *location = reg[ins->rd];
     }
