@@ -1,7 +1,6 @@
 #include "operations.h"
-
-#include"emudef.h"
 #include<assert.h>
+#include "emudef.h"
 
 //update the cpsr according to the spec
 void change_cpsr(int32_t a, int32_t *cpsr,int32_t c) {

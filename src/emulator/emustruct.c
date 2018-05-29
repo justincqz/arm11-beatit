@@ -68,3 +68,9 @@ void delete_state(State_t *state) {
 }
 
 
+Instruction_t *new_instruction() {
+    Instruction_t *ins = malloc(sizeof(Instruction_t));
+	memset(ins, 0, sizeof(*ins));
+    return ins;
+}
+

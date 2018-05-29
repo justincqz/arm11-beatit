@@ -4,7 +4,8 @@
 #include<stdlib.h>
 #include"emustruct.h"
 #include"emuio.h"
-#include"emudef.h"
+
+
 
 void emuread(char *fileName, State_t *state) {
 
@@ -32,6 +33,7 @@ void emuread(char *fileName, State_t *state) {
 	}
 
 	fclose(file);
+    return;
 }
 
 void emuwrite(Storage_t *storage) {
@@ -48,6 +50,7 @@ void emuwrite(Storage_t *storage) {
     printf("PC  ");
     printf(": %10d (0x%08x)\n", storage->reg[PC_REG], storage->reg[PC_REG]);
 
+//  PART I: initialize the CPSR to 0
     printf("CPSR");
     printf(": %10d (0x%08x)\n", storage->reg[CPSR_REG], storage->reg[CPSR_REG]);
 

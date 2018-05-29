@@ -6,8 +6,15 @@
 #define PC_REG 15
 #define CPSR_REG 16
 #define TERMINATION_CODE 0
+#define PC_INCREMENT_GAP 4
+
+#define CPSR_BIT_LOWER 28
+#define CPSR_BIT_UPPER 31
+
 #define INSTRUCTION_LENGTH 32
 
+#define INSTRUCTION_BYTE 4
+#define BYTES_FOR_INT 4
 
 #define FURTHER_TYPE_CHECKING 0
 #define TYPE_BIT_LOWER 26
@@ -53,21 +60,19 @@
 #define ADDRESS_UPPER_BIT 23
 #define IMMEDIATE_UPPER_BIT 7
 
-#define BRANCH_SIGNED_MASK 1<<23
-#define BRANCH_EXTENSION ((1 << 9) - 1) << 23
-#define CPSR_BIT_LOWER 28
-
-#define CPSR_BIT_UPPER 31
-#define INSTRUCTION_BYTE 4
-
-#define BYTES_FOR_INT 4
-#define N_BIT 31
 #define C_BIT 29
-#define V_BIT 28
-#define UNSIGNED_INT_MAX ~0
 #define WORD_BITS 32
 #define PC_GAP 4
+#define PC_AHEAD 8
 
+#define SHIFT_GAP_NZCV_CPSR 28
+#define BRANCH_SIGNED_MASK 1<<23
+#define BRANCH_EXTENSION ((1 << 9) - 1) << 23
+
+#define Z_BIT 30
+#define N_BIT 31
+#define V_BIT 28
+#define UNSIGNED_INT_MAX ~0
 
 typedef enum {
     FAILURE = -1,

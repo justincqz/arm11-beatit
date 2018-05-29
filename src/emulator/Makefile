@@ -37,5 +37,6 @@ emuexecute.o: emuexecute.h emustruct.h emudef.h
 
 emustruct.o: emustruct.h emudef.h
 
-operations.o: emustruct.h emudef.h
+operations.o: operations.h emustruct.h emudef.h
+
 

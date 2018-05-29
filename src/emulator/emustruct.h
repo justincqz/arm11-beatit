@@ -57,5 +57,6 @@ typedef struct State {
 State_t *new_state();
 void delete_state(State_t *state);
 
+Instruction_t *new_instruction();
 
 #endif
