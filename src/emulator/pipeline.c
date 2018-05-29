@@ -5,6 +5,7 @@
 #include"emuexecute.h"
 #include"pipeline.h"
 #include<string.h>
+#include"emudef.h"
 
 
 void fetch(State_t *state) {
