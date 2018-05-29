@@ -7,23 +7,23 @@ CFLAGS  = -Wall -g -std=c99 -Werror -pedantic
 
 all: emulate testio testalu testshifter testdecode
 
-testdecode: pipeline.o emustruct.o emuexecute.o emudecode.o alu.o shifter.o 
+testdecode: pipeline.o emustruct.o emuexecute.o emudecode.o operations.o
 
 testdecode.o: pipeline.h emustruct.h emudef.h
 
-testshifter: shifter.o
+testshifter: operations.o
 
-testshifter.o: emudef.h shifter.h
+testshifter.o: emudef.h operations.h
 
-testalu: alu.o
+testalu: operations.o
 
-testalu.o: emudef.h alu.h
+testalu.o: emudef.h operations.h
 
 testio: emuio.o emustruct.o
 
 testio.o: emuio.h
 
-emulate: pipeline.o emuio.o emustruct.o emudecode.o emuexecute.o alu.o shifter.o
+emulate: pipeline.o emuio.o emustruct.o emudecode.o emuexecute.o operations.o
 
 emulate.o: emuio.h emudef.h emustruct.h pipeline.h emudecode.h emuexecute.h
 
@@ -37,6 +37,5 @@ emuexecute.o: emuexecute.h emustruct.h emudef.h
 
 emustruct.o: emustruct.h emudef.h
 
-alu.o: alu.h emustruct.h emudef.h
+operations.o: emustruct.h emudef.h
 
-shifter.o: shifter.h emustruct.h

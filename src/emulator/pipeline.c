@@ -98,7 +98,7 @@ Error execute(State_t *state) {
 	}
 	
 
-	/*alloctate executaion to different types*/
+	/*allocate execution to different types*/
  	switch (ins->instruction_type) {
         case DATA_PROCESSING: 
             return execute_data_processing(state);

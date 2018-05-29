@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"emudef.h"
-#include"alu.h"
+#include"operations.h"
 
 typedef uint32_t U;
 typedef int32_t I;

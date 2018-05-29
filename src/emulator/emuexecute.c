@@ -3,8 +3,7 @@
 #include<stdint.h>
 #include"emudef.h"
 #include"emuexecute.h"
-#include"alu.h"
-#include"shifter.h"
+#include"operations.h"
 #include<stdio.h>
 #define BRANCH_SIGNED_MASK 1<<23
 #define BRANCH_EXTENSION ((1 << 9) - 1) << 23
@@ -17,7 +16,7 @@ Error execute_data_processing(State_t *state) {
     int32_t *reg = state->storage->reg;
     Instruction_t *ins = state->decoded_ins;
 
-    alu_execute(ins->opcode, reg[ins->rn], calculate_imm(ins,reg)
+    alu_execute(ins->opcode, reg[ins->rn], calculate_imm(ins, reg)
 			, reg + ins->rd, reg + CPSR_REG, ins->s);
     return SUCCESS;
 }
@@ -116,7 +115,7 @@ uint32_t calculate_imm(Instruction_t *ins, int32_t *reg) {
     if(ins->i) {
         return shift ( (ins->imm), ins->rotate << 1, ROR, reg + CPSR_REG,ins->s); /*need to check*/
     }
-     uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
+    uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
     return shift(reg[ins->rm], gap, ins->shift_type, reg + CPSR_REG,ins->s);
 }
 

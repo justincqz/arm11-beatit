@@ -6,8 +6,7 @@
 #define CPSR_BIT_LOWER 28
 #define CPSR_BIT_UPPER 31
 #define SHIFT_GAP_NZCV_CPSR 28
-#include"alu.h"
-#include"shifter.h"
+#include"operations.h"
 
 
 

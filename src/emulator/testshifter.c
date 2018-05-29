@@ -1,6 +1,8 @@
 #include"emudef.h"
-#include"shifter.h"
 #include<stdio.h>
+#include "operations.h"
+#include <stdint.h>
+
 typedef int32_t I;
 typedef uint32_t U;
 #define SIZE 1000
