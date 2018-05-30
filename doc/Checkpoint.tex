@@ -51,24 +51,24 @@ how you imagine it might need to change for the later tasks.
 \section{Details About Emulator}
 After reading the first part, we realized that there were several keywords that helped us to decompose the whole emulator, such as: $read and write$, $pipeline$, $alu$, $shifter$, $execute$, $decode$ and $fetch$. The spec helped us splitting the instructions into 4 main types. Thus, We use the keywords to structure the different files and the instructions types as switch to separate the different types. Then, Yoram and Halite discussed and confirmed over the details about the precoditions and postconditions of their own parts as following:
 \\\\
-\textbf{emulate.c:} the main functions is pretty straightforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new_state$ and $delete_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline_circle$ functions in \textbf{pipeline.c}.\\
+\textbf{emulate.c:} the main functions is pretty straightforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new\_state$ and $delete\_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline\_circle$ functions in \textbf{pipeline.c}.\\
 \\\\
 \textbf{emuio.c:} contains 2 major functions: $emuread$ and $emuwrite$. \textbf{emuread} read the binary file and convert the binary numbers into decimal form and save it into our "memory".
 \textbf{emuwrite:} outputs the result of "registers" and "non-zero memory address".
 \\\\
-\textbf{pipeline.c} contains 4 major functions: $pipeline_circle$, $execute$, $decode$, and $fetch$. The $pipeline_circle$ uses the other 3 functions to simulate the process. $fetch$ get the instruction code from the "memory". $decode$ decomposes the fetched code into small parts according to 4 major instruction types by calling them in \textbf{emudecode.c}. Finally, $execute$ function passes the instruction and storage into 4 major instruction type execution coded in \textbf{emuexecute.c} .
+\textbf{pipeline.c} contains 4 major functions: $pipeline\_circle$, $execute$, $decode$, and $fetch$. The $pipeline\_circle$ uses the other 3 functions to simulate the process. $fetch$ get the instruction code from the "memory". $decode$ decomposes the fetched code into small parts according to 4 major instruction types by calling them in \textbf{emudecode.c}. Finally, $execute$ function passes the instruction and storage into 4 major instruction type execution coded in \textbf{emuexecute.c} .
 \\\\
 \textbf{emudecode.c} contains 4 major functions according to 4 different instruction types.
 \\\\
-\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute_data_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}\\
+\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute\_data\_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}\\
 \\\\
 \textbf{operation.c:} contains all the operations coming from the alu and the shifter.
 \\\\
 \textbf{emudef.h:} contains all the definitions of constant number and enum types in our emulator project.
 \\\\
-\textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new_state$ and $delete_state$ functions.
+\textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new\_state$ and $delete\_state$ functions.
 \\\\
-\textbf{emustruct.h} contains the above two functions. $new_state$ allocates memory space to our spaces, including the elements in the state. $delete_state$ frees all the memory space allocated in $new_state$.
+\textbf{emustruct.h} contains the above two functions. $new\_state$ allocates memory space to our spaces, including the elements in the state. $delete\_state$ frees all the memory space allocated in $new\_state$.
 \\\\
 
 
