@@ -17,23 +17,25 @@
 \maketitle
 
 \section{Group Work Allocation}
-At the beginning in this project, 4 of us splited into 2 groups:\\ \\
-Halite Abudureyimu and Yoram ... co-work the first part: emulator. Halite designed the structure of the emulator, and coded the emulate.c,pipeline.c emuexecute.c files. Yoram coded the emuio.c emudecode.c operation.c files. Both of them debuged, cleaned and reorganized the files together.
+At the beginning of this project, the group was splitted into 2 subgroups:\\ \\
+Halite Abudureyimu and Yoram Boccia co-worked on the first part: the emulator. Halite designed the structure of the emulator, and coded the emulate.c, pipeline.c and emuexecute.c files. Yoram coded the emuio.c, emudecode.c, operation.c files. There was a really good communication between the two. Both of them debugged, cleaned and reorganized the files together.
 \\\\
-Justin ... and Hadrian co-work the second part: assembler. /*need details*/
+Justin and Hadrian co-worked on the second part: the assembler. /*need details*/
 \\\\
 
-While we were coding, we use git lab to combine our works by pushing up the codes to our own branches, and the group leader merge and maintain the codes accordingly. We finished coding the emulator in 26-05-2018 and debugging in 28-05-2018. And we are going to finish the assembler in 31-05-2018. Also, before 02-06-2018, we will finish the third part and start to work with the fourth part.
+While we were progressing with the project, we used gitlab to combine our works by pushing up the codes to our own branches, and the group leader was responsible of merging and maintaining the different codes accordingly.
+We finished coding the emulator in 26-05-2018 and debugging it in 28-05-2018. We are now completing the assembler part. We plan to finish the third part and start to work on the fourth part before 02-06-2018.
 
 \section{Opinions about Group Working}
 \textbf{Halite:}\\
 I think we are cooperating with each other really well. Yoram and I did the first part, during the working period, we talked to each other alot. Especially during the debugging, we operated the computer in turns in every two hours, which was really helpful for our efficiency since debugging is really overwhelming job.\\\\
-In order to work together more effectively and delightfully, I assume that we can hang out together beyond the working time, like playing football, havind dinners and watching movies. We can not know each other better by doing them, but also have some proper rest.\\
+In order to work together more effectively and delightfully, I assume that we can hang out together beyond the working time, like playing football, having dinners and watching movies. We can not know each other better by doing them, but also have some proper rest.\\
 \\
 \textbf{Yoram:}\\
- how well you think the group is working
-\\\\
-how you imagine it might need to change for the later tasks.\\
+I believe that our group is really motivated and we really communicate in an efficient way. We have communicated from the the beginning and splitted the work between us.
+Halite and I worked really well on the emulator part. We planned the work together before starting coding out own part. We implemented functions that were needed by the other one and therefore we had to collaborate and communicate a lot.
+Debugging was the best part because together we understood our final code and we wrote tests for every file before debugging the whole emulator. Together we managed to do it at the end.
+For the next tasks I believe we should continue in the same way we are already doing, but maybe hanging out more together to rest a little bit from the project.
 \\
 \textbf{Justin:}\\
  how well you think the group is working
@@ -47,12 +49,12 @@ text
 how you imagine it might need to change for the later tasks.
 
 \section{Details About Emulator}
-After reading the first part, we realized that there were several key noun words that help us decompose the whole emulator, such as: $read and write$, $pipeline$, $alu$, $shifter$, $execute$, $decode$, $fetch$. And the spec already helped us split the instructions into 4 main types. Thus, We use the key words to structure the files and the instructions types as switch to seperate the different types. Then, Yoram and Halite discussed and confirmed over the details about the precoditions and postconditions of their own parts as following:
+After reading the first part, we realized that there were several keywords that helped us to decompose the whole emulator, such as: $read and write$, $pipeline$, $alu$, $shifter$, $execute$, $decode$ and $fetch$. The spec helped us splitting the instructions into 4 main types. Thus, We use the keywords to structure the different files and the instructions types as switch to separate the different types. Then, Yoram and Halite discussed and confirmed over the details about the precoditions and postconditions of their own parts as following:
 \\\\
-\textbf{emulate.c:} the main functions is pretty straitforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new_state$ and $delete_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline_circle$ functions in \textbf{pipeline.c}.\\
+\textbf{emulate.c:} the main functions is pretty straightforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new_state$ and $delete_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline_circle$ functions in \textbf{pipeline.c}.\\
 \\\\
 \textbf{emuio.c:} contains 2 major functions: $emuread$ and $emuwrite$. \textbf{emuread} read the binary file and convert the binary numbers into decimal form and save it into our "memory".
-\textbf{emuwrite:} out put the result of "registers" and "memory address".
+\textbf{emuwrite:} outputs the result of "registers" and "non-zero memory address".
 \\\\
 \textbf{pipeline.c} contains 4 major functions: $pipeline_circle$, $execute$, $decode$, and $fetch$. The $pipeline_circle$ uses the other 3 functions to simulate the process. $fetch$ get the instruction code from the "memory". $decode$ decomposes the fetched code into small parts according to 4 major instruction types by calling them in \textbf{emudecode.c}. Finally, $execute$ function passes the instruction and storage into 4 major instruction type execution coded in \textbf{emuexecute.c} .
 \\\\
@@ -60,13 +62,13 @@ After reading the first part, we realized that there were several key noun words
 \\\\
 \textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute_data_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}\\
 \\\\
-\textbf{operation.c:} please read above.
+\textbf{operation.c:} contains all the operations coming from the alu and the shifter.
 \\\\
-\textbf{emudef.h:} contains all the definations of constant number, enum types in our emulator project.
+\textbf{emudef.h:} contains all the definitions of constant number and enum types in our emulator project.
 \\\\
 \textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new_state$ and $delete_state$ functions.
 \\\\
-\textbf{emustruct.h} contains the above two functins. $new_state$ allocates memory space to our spaces, including the elements in the state. $delete_state$ frees all the memory space allocated in $new_state$.
+\textbf{emustruct.h} contains the above two functions. $new_state$ allocates memory space to our spaces, including the elements in the state. $delete_state$ frees all the memory space allocated in $new_state$.
 \\\\
 
 
@@ -74,5 +76,7 @@ After reading the first part, we realized that there were several key noun words
 
 \section{A discussion on implementation tasks that you think you will find difficult / challenging later on,
 and how you are working to mitigate these}
+We think it will be challenging to implement the extensions for this project because we just have one Raspberry Pie and we are four in the group. Nevertheless we are going to meet every time in order to mitigate these circumstances and in order to make everyone use the Raspberry Pie.
+Of course another difficulty is going to be the small amount of time we have for this project, and therefore we have to implement extensions that are doable before the deadline. Hence, we are going to plan first every detail of our extension and consider if it is possible to finish it before the time and then we will split the work between the four of us.
 
 \end{document}
