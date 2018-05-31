@@ -1,20 +1,83 @@
-\documentclass[a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Imperial Placement Report Template 
+% LaTeX Template
+% Version 1.0 (28/06/16)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	%%%%%%%%%
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
 
+\documentclass[a4paper]{article}
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
-\usepackage[T1]{fontenc}
-
-\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
-
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[toc,page]{appendix}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
-\title{Group 11 Checkpoint Report}
-\author{Halite Abudureyimu\\Yoram\\Justin\\Hadrian}
 \begin{document}
-\maketitle
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+\setlength{\topmargin}{0in}
+\center % Center everything on the page
+ 
+ 
+ \begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\hspace*{-0.5cm}
+\includegraphics[scale=0.14]{imperial.png}\\
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.5\textwidth}
+\begin{flushright} \large
+\hspace*{2cm}
+% \includegraphics[scale=0.4]{company.png}\\
+\end{flushright}
+\end{minipage}\\[1cm]
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Imperial College of Science, Technology and Medicine}\\[1.5cm] % Name of your university/college
+\textsc{\Large Department of Computing}\\[0.5cm] % Major heading such as course name
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries ARM 11 Assembler Report}\\[0.4cm] % Title of your document
+\HRule \\[1cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\textsc{{\large
+Yoram \textsc{Boccia}, \\
+Justin \textsc{Chong}, \\ 
+Halite \textsc{Abudureyimu}, \\
+Hadrian \textsc{Lim} }}\\[0.5cm]
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[0.5cm] % Date, change the \today to a set date if you want to be precise
+
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\newpage
+
+
 
 \section{Group Work Allocation}
 At the beginning of this project, the group was split into 2 subgroups:\\ \\
@@ -43,15 +106,14 @@ Our team were quick to decide on splitting the work, and Hadrian and I were task
 Overall, we might need to get ready to modularise the projects even more as we move to part 3 and 4. Part 3 and 4 cannot be done concurrently, and are projected to be much harder than the first two parts. Our initial system of splitting the first two parts into two separate teams was useful in spreading out the workload evenly, but with part 3 and 4 we would need to be more careful into making sure that we effectively allocate work to everyone in order to get the parts done as soon as possible and also move onto the extension. Overall, we would probably need to get to know each other a little more, to see where each individual is suited to do what tasks.\\
 \\
 \textbf{Hadrian:}\\
- how well you think the group is working
+Communication within the group has been smooth so far. The group has been able to meet the deadlines that we agreed upon so far. Criticism towards each other's work has been constructive and well received. We can easily approach members of our team if we have any queries regarding the C language or to seek a second opinion on the spec. All in all, the team has a healthy dynamic that boosts productivity.
 \\\\
-text
-how you imagine it might need to change for the later tasks.
+For the future parts (III and IV), we will have to seperate the work initially, such that each of us do not depend on each other's code. This is crucial in the beginning. If we depend too much on each other's implementations, we might end up having to wait for each other and slow down individual development.
 
 \section{Details About Emulator}
 After reading the first part, we realized that there were several keywords that helped us to decompose the whole emulator, such as: $read and write$, $pipeline$, $alu$, $shifter$, $execute$, $decode$ and $fetch$. The spec helped us splitting the instructions into 4 main types. Thus, We use the keywords to structure the different files and the instructions types as switch to separate the different types. Then, Yoram and Halite discussed and confirmed over the details about the precoditions and postconditions of their own parts as following:
 \\\\
-\textbf{emulate.c:} the main functions is pretty straightforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new\_state$ and $delete\_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline\_circle$ functions in \textbf{pipeline.c}.\\
+\textbf{emulate.c:} the main functions is pretty straightforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new\_state$ and $delete\_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline\_circle$ functions in \textbf{pipeline.c}.
 \\\\
 \textbf{emuio.c:} contains 2 major functions: $emuread$ and $emuwrite$. \textbf{emuread} read the binary file and convert the binary numbers into decimal form and save it into our "memory".
 \textbf{emuwrite:} outputs the result of "registers" and "non-zero memory address".
@@ -69,14 +131,16 @@ After reading the first part, we realized that there were several keywords that 
 \textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new\_state$ and $delete\_state$ functions.
 \\\\
 \textbf{emustruct.h} contains the above two functions. $new\_state$ allocates memory space to our spaces, including the elements in the state. $delete\_state$ frees all the memory space allocated in $new\_state$.
-\\\\
-
 
 \section{Usefull Skills for the Assembeler}
+Generally, knowledge in how the binary instructions will be decoded in the emulator helps in understanding the encoding for assembly instructions. As such, members working on the emulator could help provide valuable feedback on any misunderstandings regarding the assembler.
+\\\\
+Specifically in terms of implementation details, there are a few functions used in the emulator that we have found useful for the assembler. These are general functions that deal with bits manipulation. Examples of such functions include a function to logical shift right and a function to extract certain bits from a binary representation.
 
 \section{A discussion on implementation tasks that you think you will find difficult / challenging later on,
 and how you are working to mitigate these}
-We think it will be challenging to implement the extensions for this project because we just have one Raspberry Pie and we are four in the group. Nevertheless we are going to meet every time in order to mitigate these circumstances and in order to make everyone use the Raspberry Pie.
+We think it will be challenging to implement the extensions for this project because we just have one Raspberry Pi and we are four in the group. Nevertheless we are going to meet every time in order to mitigate these circumstances and in order to make everyone use the Raspberry Pi.
+\\\\
 Of course another difficulty is going to be the small amount of time we have for this project, and therefore we have to implement extensions that are doable before the deadline. Hence, we are going to plan first every detail of our extension and consider if it is possible to finish it before the time and then we will split the work between the four of us.
 
 \end{document}
