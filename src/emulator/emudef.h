@@ -87,9 +87,9 @@ typedef enum {
 
 typedef enum {
 	DATA_PROCESSING = 0,
-	MULTIPLY = 3,
 	SINGLE_DATA_TRANSFER = 1,
 	BRANCH = 2,
+	MULTIPLY = 3,
 	TERMINATION = 4
 } Instruction_Type;
 
