@@ -16,5 +16,6 @@ void decode_data_processing(State_t *state);
 void decode_multiply(State_t *state);
 void decode_single_data_transfer(State_t *t);
 void decode_branch(State_t *t);
+void decode_termination(State_t *t);
 
 #endif

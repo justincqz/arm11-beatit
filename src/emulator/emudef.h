@@ -94,10 +94,10 @@ typedef enum {
 } Instruction_Type;
 
 typedef enum {
-	LSL, /*logic left*/
-	LSR, /*logic right*/
-	ASR, /*arithmatic right*/
-	ROR /*rotate right*/
+	LSL = 0, /*logic left*/
+	LSR = 1, /*logic right*/
+	ASR = 2, /*arithmatic right*/
+	ROR = 3/*rotate right*/
 } Shift_Type;
 
 typedef enum  {
@@ -122,5 +122,7 @@ typedef enum {
     ORR = 12,
     MOV = 13
 } Operation_Type;
+
+
 
 #endif

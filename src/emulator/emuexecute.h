@@ -16,6 +16,6 @@ Error execute_data_processing(State_t *state);
 Error execute_multiply(State_t *state);
 Error execute_single_data_transfer(State_t *state);
 Error execute_branch(State_t *state);
-
+Error execute_termination(State_t *state);
 #endif
 

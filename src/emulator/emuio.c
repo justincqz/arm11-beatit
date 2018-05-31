@@ -54,7 +54,7 @@ void emuwrite(Storage_t *storage) {
     printf("CPSR");
     printf(": %10d (0x%08x)\n", storage->reg[CPSR_REG], storage->reg[CPSR_REG]);
 
-    printf("Non-zero memory: \n");
+    printf("Non-zero memory:\n");
     for (int i = 0; i < MEMORY_SIZE; i ++) {
         if ( *(storage->mem + i) != 0) {
 			uint32_t value = *(storage->mem+i);

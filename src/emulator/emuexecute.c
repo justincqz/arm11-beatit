@@ -6,7 +6,6 @@
 #include<stdio.h>
 #include"operations.h"
 
-
 Error execute_data_processing(State_t *state) {
     int32_t *reg = state->storage->reg;
     Instruction_t *ins = state->decoded_ins;
@@ -82,10 +81,10 @@ Error execute_single_data_transfer(State_t *state){
 				break;
 			case PIN_ON:
 				printf("PIN ON\n");
-				return SUCCESS;
+				break;
 			case PIN_OFF:
 				printf("PIN OFF\n");
-				return SUCCESS;
+				break;
 			default:
 				printf("Error: Out of bounds memory access at address 0x%08x\n", mem_add);
 				return FAILURE;
@@ -116,16 +115,21 @@ Error execute_branch(State_t *state){
     Instruction_t *ins = state->decoded_ins;
 
     /*start code*/
-    int32_t offset = ins->address;
+    uint32_t offset = ins->address;
     if ( offset & BRANCH_SIGNED_MASK) { /*1 << 23*/
         offset |= BRANCH_EXTENSION;/*((1 << 9) - 1) << 23*/
     }
     offset <<= 2;
-    reg[PC_REG] += offset;
+    reg[PC_REG] += (int32_t) offset;
     state->isFetched=0;
     state->isDecoded=0;
     ins->executable=0;
     return SUCCESS;
+}
+
+Error execute_termination(State_t *state) {
+	state->isTerminated = 1;
+	return SUCCESS;
 }
 
 uint32_t calculate_imm(Instruction_t *ins, int32_t *reg) {

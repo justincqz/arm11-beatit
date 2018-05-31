@@ -4,6 +4,8 @@
 #include"emudecode.h"
 #include"emudef.h"
 
+
+
 //extract bits of the Instruction and return decimal value
 inline uint32_t extract_code(register uint32_t code, register uint32_t lower_bit, register uint32_t upper_bit) {
     code <<= (31-upper_bit);
@@ -95,6 +97,9 @@ void decode_single_data_transfer(State_t *state){
 void decode_branch(State_t *state) {
     decode_cond_instruction(state->fetched_code, state->decoded_ins);
     state->decoded_ins->address = extract_code(state->fetched_code, BIT_ZERO, ADDRESS_UPPER_BIT);
+}
 
+void decode_termination(State_t *state) {
+	return;
 }
 

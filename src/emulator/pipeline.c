@@ -8,6 +8,23 @@
 #include"emudef.h"
 
 
+void (*decode_functions[5]) (State_t *state) = {
+	decode_data_processing,
+	decode_single_data_transfer,
+	decode_branch,
+	decode_multiply,
+	decode_termination
+};
+
+Error (*execute_functions[5]) (State_t *state) = {
+	execute_data_processing,
+	execute_single_data_transfer,
+	execute_branch,
+	execute_multiply,
+	execute_termination
+};
+
+
 
 void fetch(State_t *state) {
 	int32_t *pc_reg = state->storage->reg + PC_REG;
@@ -27,24 +44,9 @@ void decode(State_t *state) {
 	/*try to figure out the ins type*/
 	*ins_type = get_ins_type(state->fetched_code);
     
-	/*allocate the different instruction type to different implementation*/
-    switch (*ins_type) {
-        case DATA_PROCESSING: 
-            decode_data_processing(state);
-            break;
-        case MULTIPLY: 
-            decode_multiply(state); 
-            break;
-        case SINGLE_DATA_TRANSFER: 
-            decode_single_data_transfer(state);
-            break;
-        case BRANCH: 
-            decode_branch(state);
-            break;
-        case TERMINATION:
-			break;
-    }
-	
+	/*allocate the different instruction type to different implementationi*/
+	decode_functions[*ins_type](state);
+
     state -> isDecoded = 1;
     return;
 }
@@ -85,7 +87,8 @@ Error execute(State_t *state) {
     int32_t *cpsr = state->storage->reg + CPSR_REG;
     uint32_t nzcv
         = extract_code((uint32_t) *cpsr, CPSR_BIT_LOWER, CPSR_BIT_UPPER);
-    if(ins->instruction_type == TERMINATION) {
+    
+	if(ins->instruction_type == TERMINATION) {
 		state->isTerminated=1;
 		return SUCCESS;
 	}
@@ -99,24 +102,7 @@ Error execute(State_t *state) {
 	
 
 	/*alloctate executaion to different types*/
- 	switch (ins->instruction_type) {
-        case DATA_PROCESSING: 
-            return execute_data_processing(state);
-        
-        case MULTIPLY: 
-            return execute_multiply(state); 
-        
-        case SINGLE_DATA_TRANSFER: 
-            return execute_single_data_transfer(state); 
-        
-        case BRANCH: 
-            return execute_branch(state);
-        
-        case TERMINATION:
-            state->isTerminated = 1;
-            return SUCCESS;
-    }
-    return SUCCESS;
+	return execute_functions[ins->instruction_type](state);
 }
 
 Error pipeline_circle(State_t *state) {    
