@@ -302,6 +302,10 @@ uint32_t* parseImmediate(char* inp, uint8_t type){
   } else if (res > 255 && type == 0) {
       rotate = parseRotateCount(res);
 
+      if (rotate == -1) {
+        perror("Cannot represent mov command in 8 bits\n");
+        exit(EXIT_FAILURE);
+      }
       // If rotate is odd,
       if (rotate % 2 == 1) {
         rotate--;
