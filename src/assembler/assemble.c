@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include "strutils.h"
+#include "assdef.h"
 
 FILE* openFile(char *path);
 struct sym{
@@ -12,8 +14,6 @@ struct sym{
 uint32_t* firstPass(struct sym* symTable, FILE* fp);
 uint32_t* secondPass(struct sym* symTable, FILE* fp, uint32_t* noInst);
 int writeFile(char* outFile, uint32_t* binTable, uint32_t noInst);
-char* cleanDelim(char* inp, char* delim);
-
 
 int main(int argc, char **argv) {
     FILE* inpF;
@@ -45,16 +45,6 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
 }
 
-/*
-uint8_t* parseImmediate(char* inp, uint8_t type);
-int main(int argc, char **argv){
-  printf("Test %s\n", argv[1]);
-  uint8_t* rout = parseImmediate(argv[1], 0);
-  printf("Val of %s is %u, with a rotate of %u\n", argv[1], rout[0], rout[1]);
-  return 0;
-} */
-
-
 FILE* openFile(char *path){
     FILE* fp = fopen(path, "r");
     if(fp == NULL) {
@@ -72,38 +62,6 @@ int writeFile(char* outFile, uint32_t* binTable, uint32_t noInst){
   return 0;
 }
 
-// Check if a given string is a label
-uint8_t isLabel(char* txt){
-    int x = 0;
-    while(x != -1) {
-        if (txt[x] == ':'){
-            return 1;
-        }
-        if (txt[x] == '\0'){
-            return 0;
-        }
-        x++;
-    }
-  return 0;
-}
-
-// Returns a copy of the string if the character is not found
-char* stripStr(char* txt, char delimiter){
-    int newSize = 0;
-    char* newStr;
-    while (newSize <= sizeof(txt)){
-        if(txt[newSize] == delimiter){
-            newSize++;
-            break;
-        }
-        newSize++;
-    }
-    newStr = malloc(newSize * sizeof(char));
-    strncpy(newStr, txt, newSize);
-    newStr[newSize - 1] = '\0';
-    return newStr;
-}
-
 uint32_t* firstPass(struct sym* symTable, FILE* fp){
     uint32_t lineNum = 0;
     int currSym = 0;
@@ -113,7 +71,7 @@ uint32_t* firstPass(struct sym* symTable, FILE* fp){
         //printf("line no: %d\n", lineNum);
         //printf("Current Str: %s\n", currStr);
         currStr = cleanDelim(currStr, " \n");
-        if(isLabel(currStr) == 0 && *currStr != '\0'){
+        if(chrExists(currStr, ':') == 0 && *currStr != '\0'){
             lineNum++;
         } else {
             if(currSym == (sizeof(symTable)/sizeof(struct sym)) - 1) {
@@ -127,47 +85,20 @@ uint32_t* firstPass(struct sym* symTable, FILE* fp){
             currSym++;
         }
     }
+
     //if (*currStr != NULL) {
       //free(currStr);
     //}
+
     uint32_t* out = calloc(2, sizeof(uint32_t));
     out[0] = lineNum;
     out[1] = currSym;
     return out;
 }
 
-// Check if character in string
-int inStr(char c, char* str) {
-  while (*str) {
-    if (c == *str) {
-      return 1;
-    }
-    str++;
-  }
-  return 0;
-}
-
-// Clear leading and trailing delimiters
-char* cleanDelim(char* inp, char* delim) {
-  while(inStr(*inp, delim) == 1) {
-    inp++;
-  }
-  for (int i = strlen(inp) - 1; i >= 0; i--) {
-    if (inStr(inp[i], delim) == 0) {
-      inp[i + 1] = '\0';
-      return inp;
-    }
-  }
-  return inp;
-}
-
-// Extract8Bits offset from right
-uint32_t extractBits(int input, int offsetFromRight, int numBits) {
-  return (((1 << numBits) - 1) & (input >> offsetFromRight));
-}
-
 // Cannot take an r character
-int parseRegInt(char* reg){
+int parseRegInt(char* reg) {
+  reg = cleanDelim(reg, " r,\n");
   if(reg == NULL){
     return 0;
   }
@@ -175,25 +106,20 @@ int parseRegInt(char* reg){
   return res;
 }
 
-int parseShiftType(char* op){
-  switch(op[0]){
+Shift_Type parseShiftType(char* op) {
+  switch(op[0]) {
     case 'l':
-      // Logical left
       if(op[2] == 'l') {
-        return 0;
+        return LSL;
       } else {
-
-      // Logical right
-        return 1;
+        return LSR;
       }
 
     case 'a':
-      // Arithmetic right
-      return 2;
+      return ASR;
 
     case 'r':
-      // Rotate right
-      return 3;
+      return ROR;
 
     default:
       perror("Failed to parse shift type.");
@@ -201,69 +127,10 @@ int parseShiftType(char* op){
   }
 }
 
-// Calculates the amount of rotate required to fit the 32 bit into 8 bits
-int parseRotateHelper(uint32_t val){
-  int leading0 = 0;
-  int trailing0 = 0;
-  int stillCounting = 3;
-  int index = 0;
-
-
-  while (index < 32){
-    // Counting leading zeros
-    if (stillCounting / 2 == 1) {
-      if ((~val & (1 << (31 - index))) == (1 << (31 - index))){
-        leading0++;
-      } else {
-        stillCounting -= 2;
-      }
-    }
-
-    // Counting trailing zeros
-    if (stillCounting % 2 == 1) {
-      if ((~val & (1 << index)) == (1 << index)) {
-        trailing0++;
-      } else {
-        stillCounting -= 1;
-      }
-    }
-    index++;
-  }
-  // Check if its not 8 bits
-  if ((leading0 + trailing0) < 24) {
-    return -1;
-  }
-  return trailing0;
-}
-
-// TODO: Replace my rotate function
-unsigned rotl(unsigned x, unsigned n) {
-    return (x << n) | ((x >> (32 - n)) & ~(-1 << n));
-}
-
-// This only works with contiguous bits, so we have to manually check for bits 1-7
-int parseRotateCount(uint32_t val) {
-  int tempVal;
-  int res = parseRotateHelper(val);
-  if (res != -1) {
-    return res;
-  }
-
-  // If not 8 bits, try shifting by 1 and test again
-  for (int i = 1; i < 8; i++) {
-    tempVal = rotl(val, i);
-    res = parseRotateHelper(tempVal);
-    if (res != -1) {
-      return i;
-    }
-  }
-  return -1;
-}
-
 // Shift immediate is 5 bits, immediate addressing is 8 bits
 // To declare shift mode, set type to 1
 // To declare signed mode, set type to 2
-uint32_t* parseImmediate(char* inp, uint8_t type){
+uint32_t* parseImmediate(char* inp, uint8_t type) {
 
   // Strip '#'
   int sizeInp = strlen(inp);
@@ -271,10 +138,10 @@ uint32_t* parseImmediate(char* inp, uint8_t type){
   temp[sizeInp - 1] = '\0';
   temp = strcpy(temp, inp);
   temp++;
-  printf("temp: %s\n", temp);
 
   uint32_t rotate = 0;
   uint32_t res = 0;
+
   // If negative immediate value
   if (temp[0] == '-') {
       if (type == 2) {
@@ -300,7 +167,7 @@ uint32_t* parseImmediate(char* inp, uint8_t type){
     exit(EXIT_FAILURE);
 
   } else if (res > 255 && type == 0) {
-      rotate = parseRotateCount(res);
+      rotate = countRRot(res);
 
       if (rotate == -1) {
         perror("Cannot represent mov command in 8 bits\n");
@@ -315,8 +182,8 @@ uint32_t* parseImmediate(char* inp, uint8_t type){
       // Since we right shift by rotate, we must store the left shift value
       rotate = (32 - rotate) / 2;
   }
-
   uint32_t* out = calloc(2, sizeof(uint32_t));
+
   out[0] = res;
   out[1] = rotate;
   return out;
@@ -359,6 +226,7 @@ int parseOperand2(char* op1, char* op2, char* op3, char* flag, int isSdt){
     }
     res += shift << 4;
     res += parseRegInt(op1);
+
     return res;
   }
 
@@ -372,9 +240,11 @@ int parseOperand2(char* op1, char* op2, char* op3, char* flag, int isSdt){
   uint32_t* out = parseImmediate(op1, 0);
   res += out[0];
   res += out[1] << 8;
+
   //if (*out != NULL) {
     //free(out);
   //}
+
   return res;
 }
 
@@ -389,6 +259,7 @@ uint32_t dataCmd(char* opcode, char* rd, char* rn, char* op1, char* op2, char* o
 
   // Add rd to res
   res += parseRegInt(rd) << 12;
+
 
   // Add the value of the opcode, flag set bit, and immediate value
   res += isImmediate[0] << 25;
@@ -431,13 +302,12 @@ uint32_t sdtCmd(char* rd, char* address, int isLDR, uint32_t* append, int off, i
         char* newAddr = calloc(18, sizeof(char));
         sprintf(newAddr, "[r15,#%u]", (off - 2) * 4);
 
-        printf("newAddr: %s\n", newAddr);
         return sdtCmd(rd, newAddr, 1, append, off, 0);
       }
 
-  // Shifted Register Offset
+
   }
-    printf("Entered regoffset process\n");
+    // Shifted Register Offset
     // If pre-indexing mode
     if (strlen(strpbrk(address, "]")) == 1) {
       p = 1;
@@ -445,23 +315,17 @@ uint32_t sdtCmd(char* rd, char* address, int isLDR, uint32_t* append, int off, i
 
     address = cleanDelim(address, " r[]");
 
-    printf("Current address string: %s\n", address);
-
     char* isNeg = calloc(2, sizeof(uint8_t));
     char* rn = strtok(address, " ]r,\n");
     char* op1 = strtok(NULL, " ]r,\n");
     char* op2 = strtok(NULL, " ]r,\n");
     char* op3 = strtok(NULL, " ]r,\n");
-    printf("Parsing operand\n");
-    printf("op1: %s\n", op1);
 
     // If there is no operands, offset = 0;
     if (op1 != NULL) {
-      printf("Are you working?");
       offset = parseOperand2(op1, op2, op3, isNeg, 1);
     }
 
-    printf("Parse complete!\n");
     u = *isNeg;
     if (offset == 0) {
       u = 1;
@@ -482,7 +346,6 @@ uint32_t sdtCmd(char* rd, char* address, int isLDR, uint32_t* append, int off, i
   res += u << 23;
   res += p << 24;
   res += i << 25;
-  printf("P: %d, U: %d, I: %d\n", p, u, i);
 
   //free(isNeg);
 
@@ -545,7 +408,6 @@ uint32_t multCmd(char* inp){
   if (rn != NULL) {
     res += 1 << 21;
   }
-  printf("RN : %s\n", rn);
   res += parseRegInt(rn) << 12;
 
   return res;
@@ -560,7 +422,7 @@ uint32_t lslCmd(char* inp) {
   return dataCmd("1101", rn, "0", op1, op2, op3, 0);
 }
 
-//Assumes a symTable size of 32 for now.
+// TODO: Assumes a symTable size of 32 for now.
 uint8_t lookUpLineNum(struct sym* symTable, char* name) {
   for (int i = 0; i < 32; i++) {
     if (strcmp(symTable[i].name, name) == 0) {
@@ -576,7 +438,7 @@ uint32_t branchCmd(char* inp, struct sym* symT, int lineNo) {
   char* label = stripStr(strtok(NULL, " "), '\n');
   int labelLineNo = lookUpLineNum(symT, label);
   int32_t offset = labelLineNo - (lineNo + 2);
-  uint32_t offset24Bits = extractBits(offset, 0, 24);
+  uint32_t offset24Bits = offset & (0x00FFFFFF);
 
   uint32_t res;
   switch (command[1]) {
@@ -688,7 +550,7 @@ uint32_t parseStr(char* inp, struct sym* symT, int lineNo, int noInst, uint32_t*
         strtok(inp, " r,\n");
         char* rd = strtok(NULL, " r,\n");
         char* address = strtok(NULL, "");
-        cleanDelim(address, " ,\n");
+        address = cleanDelim(address, " ,\n");
         return sdtCmd(rd, address, 0, sdtAppend, noInst - lineNo, 1);
       }
       break;
@@ -706,7 +568,7 @@ uint32_t parseStr(char* inp, struct sym* symT, int lineNo, int noInst, uint32_t*
         strtok(inp, " r,\n");
         char* rd = strtok(NULL, " r,\n");
         char* address = strtok(NULL, "");
-        cleanDelim(address, " ,\n");
+        address = cleanDelim(address, " ");
         return sdtCmd(rd, address, 1, sdtAppend, noInst - lineNo, 1);
 
       } else {
@@ -750,14 +612,18 @@ uint32_t* secondPass(struct sym* symTable, FILE* fp, uint32_t* noInst){
   int lineNum = 0;
 
   while (fgets(currStr, 512, fp) != NULL) {
-
       currStr = cleanDelim(currStr, " \n");
-      printf("Current Inp: %s\n", currStr);
+
       if (*currStr == '\0') {
         continue;
       }
+      if (*currStr == '/') {
+        continue;
+      }
+
+      printf("Current Inp: %s\n", currStr);
       // Empty line, go to next
-        if(isLabel(currStr) == 0) {
+        if(chrExists(currStr, ':') == 0) {
           uint32_t *sdtAppend = calloc(1, sizeof(uint32_t));
           byteTable[lineNum] = parseStr(currStr, symTable, lineNum, totalSize, sdtAppend);
 
