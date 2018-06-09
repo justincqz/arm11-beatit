@@ -7,24 +7,6 @@ all: $(BUILD)
 clean:
 	rm *.o
 
-#testio testalu testshifter testdecode
-
-#testdecode: pipeline.o emustruct.o emuexecute.o emudecode.o operations.o
-
-#testdecode.o: pipeline.h emustruct.h emudef.h
-
-#testshifter: operations.o
-
-#testshifter.o: emudef.h operations.h
-
-#testalu: operations.o
-
-#testalu.o: emudef.h operations.h
-
-#testio: emuio.o emustruct.o
-
-#testio.o: emuio.h
-
 assemble: assemble.o strutils.o parsedata.o parseStr.o arm11struct.o assencode.o
 
 assemble.o: arm11struct.h arm11def.h parseStr.h strutils.h

@@ -31,12 +31,12 @@ Instruction_t* parseImmediate(char* inp, Instruction_t* ins) {
 
   // If negative immediate value
   if (temp[0] == '-') {
-      if (ins->instruction_type != SINGLE_DATA_TRANSFER) {
-        perror("Negative immediate value set for non data transfer\n");
-        exit(EXIT_FAILURE);
-      }
-      ins->u = 0;
-      temp++;
+    if (ins->instruction_type != SINGLE_DATA_TRANSFER) {
+      perror("Negative immediate value set for non data transfer\n");
+      exit(EXIT_FAILURE);
+    }
+    ins->u = 0;
+    temp++;
   }
 
   // Check for hex
@@ -51,14 +51,14 @@ Instruction_t* parseImmediate(char* inp, Instruction_t* ins) {
   // Deal with rotations if it is address mode (8 bits)
   if ((ins->i && ins->instruction_type == SINGLE_DATA_TRANSFER) ||
     (!ins->i && ins->instruction_type == DATA_PROCESSING)) {
-      ins->o = 0;
-
-      if (res > 31) {
-        perror("Cannot represent register shift within 5 bits\n");
-        exit(EXIT_FAILURE);
-      }
-      ins->shift_constant = res;
+    
+    ins->o = 0;
+    if (res > 31) {
+      perror("Cannot represent register shift within 5 bits\n");
+      exit(EXIT_FAILURE);
     }
+    ins->shift_constant = res;
+  }
 
   // Calculate and deal with rotations
   else if (ins->instruction_type == DATA_PROCESSING && res > UNSIGNED_8BIT_MAX) {
@@ -210,43 +210,41 @@ uint32_t parseSDTCmd(char* inp, uint32_t* append, int off) {
     ins = parseImmediate(address, ins);
 
       // If offset is less than 255 and also an ldr command, return the mov cmd
-      if (ins->imm <= UNSIGNED_8BIT_MAX && ins->l == 1) {
-        ins->instruction_type = DATA_PROCESSING;
-        ins->opcode = MOV;
-        ins->rn = 0;
-        ins->s = 0;
-        ins->i = 1;
+    if (ins->imm <= UNSIGNED_8BIT_MAX && ins->l == 1) {
+      ins->instruction_type = DATA_PROCESSING;
+      ins->opcode = MOV;
+      ins->rn = 0;
+      ins->s = 0;
+      ins->i = 1;
 
       // Or else just redefine to pre-index PC instruction
+    } else {
+      *append = ins->imm;
+      ins->p = 1;
+      ins->rn = PC_REG;
+      int offset = (off - 2) * 4;
+
+      if (offset < 0) {
+        ins->u = 0;
+        offset *= -1;
       } else {
-        *append = ins->imm;
-        ins->p = 1;
-        ins->rn = PC_REG;
-        int offset = (off - 2) * 4;
-
-        if (offset < 0) {
-          ins->u = 0;
-          offset *= -1;
-        } else {
-          ins->u = 1;
-        }
-
-        if (offset > UNSIGNED_12BIT_MAX) {
-					delete_instruction(ins);
-          perror("Cannot store data, offset too large\n");
-          exit(EXIT_FAILURE);
-        }
-        ins->imm = offset;
+        ins->u = 1;
       }
+
+      if (offset > UNSIGNED_12BIT_MAX) {
+        delete_instruction(ins);
+        perror("Cannot store data, offset too large\n");
+        exit(EXIT_FAILURE);
+      }
+      ins->imm = offset;
+    }
   } else {
     // Shifted Register Offset
     // If pre-indexing mode
     if (strlen(strpbrk(address, "]")) == 1) {
       ins->p = 1;
     }
-
     address = cleanDelim(address, " r[]");
-
     ins->rn = parseRegInt(strtok(address, " ]r,\n"));
     ins->op1 = strtok(NULL, " ]r,\n");
     ins->op2 = strtok(NULL, " ]r,\n");
@@ -339,5 +337,5 @@ uint32_t branchCmd(char* inp, Sym_t** symT, Condition_Type cond, int currLine) {
   uint32_t res = encode(ins);
   delete_instruction(ins);
   free(label);
-	return res;
+  return res;
 }

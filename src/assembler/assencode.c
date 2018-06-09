@@ -61,7 +61,7 @@ uint32_t encode_multiply(Instruction_t *ins) {
 
 //decode single data transfer according to the spec
 uint32_t encode_single_data_transfer(Instruction_t* ins) {
-	uint32_t res = 0;
+  uint32_t res = 0;
   res = setBits(res, COND_LOWER_BIT, COND_UPPER_BIT, ins->cond);
   res = setBits(res, I_BIT + 1, COND_LOWER_BIT - 1, 0x1);
   res = setBits(res, I_BIT, I_BIT, ins->i);
@@ -72,7 +72,7 @@ uint32_t encode_single_data_transfer(Instruction_t* ins) {
   res = setBits(res, RD_LOWER_BIT, RD_UPPER_BIT, ins->rd);
 
   if (ins->i) {
-		if (ins->o) {
+    if (ins->o) {
       res = setBits(res, RS_LOWER_BIT, RS_UPPER_BIT, ins->rs);
     } else {
       res = setBits(res, SC_LOWER_BIT, SC_UPPER_BIT, ins->shift_constant);
@@ -97,7 +97,7 @@ uint32_t encode_branch(Instruction_t* ins) {
 }
 
 uint32_t encode_termination(Instruction_t* ins) {
-	return 0;
+  return 0;
 }
 
 uint32_t encode(Instruction_t* ins) {

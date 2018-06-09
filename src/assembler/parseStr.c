@@ -8,21 +8,23 @@ uint32_t parseStr(char* inp, Sym_t* symT, int currLine, int numInst, uint32_t* s
   char secChar = inp[1];
   char thirdChar = inp[2];
   switch(*inp) {
+    
     case 'b':
-      switch(secChar) {
+      switch(secChar) { 
         case 'l':
           if(thirdChar == 't') {
             return branchCmd(inp, symT, LT, currLine);
           } else {
             return branchCmd(inp, symT, LE, currLine);
           }
-
+        
         case 'g':
           if(thirdChar == 't') {
             return branchCmd(inp, symT, GT, currLine);
           } else {
             return branchCmd(inp, symT, GE, currLine);
           }
+        
         case 'n':
           return branchCmd(inp, symT, NE, currLine);
 
@@ -36,6 +38,7 @@ uint32_t parseStr(char* inp, Sym_t* symT, int currLine, int numInst, uint32_t* s
           exit(EXIT_FAILURE);
       }
 
+    
     case 'a':
       switch(secChar) {
         case 'n':
