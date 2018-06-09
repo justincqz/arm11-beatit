@@ -4,10 +4,6 @@
 #include"emustruct.h"
 #include<assert.h>
 
-
-
-
-
 /*helper functinos*/
 uint32_t calculate_imm(Instruction_t *ins, int32_t *reg);
 uint32_t executable(Instruction_t *ins, int32_t *cpsr);

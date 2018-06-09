@@ -23,7 +23,7 @@
 #define TYPE_BIT_UPPER 27
 #define MULTIPLY_FIRST_VALUE 9
 #define MULTIPLY_SECOND_VALUE 0
-#define MULTIPLY_FIRST_BIT_LOWER 4	
+#define MULTIPLY_FIRST_BIT_LOWER 4  
 #define MULTIPLY_FIRST_BIT_UPPER 7
 #define MULTIPLY_SECOND_BIT_LOWER 22
 #define MULTIPLY_SECOND_BIT_UPPER 25
@@ -73,56 +73,54 @@
 #define UNSIGNED_INT_MAX ~0
 
 typedef enum {
-	GPIO0_9   = 0x20200000,
-	GPIO10_19 = 0x20200004,
-	GPIO20_29 = 0x20200008,
-	PIN_ON    = 0x2020001c,
-	PIN_OFF   = 0x20200028
+  GPIO0_9   = 0x20200000,
+  GPIO10_19 = 0x20200004,
+  GPIO20_29 = 0x20200008,
+  PIN_ON    = 0x2020001c,
+  PIN_OFF   = 0x20200028
 } Gpio;
 
 typedef enum {
-    FAILURE = -1,
-    SUCCESS = 0
+  FAILURE = -1,
+  SUCCESS = 0
 } Error;
 
 typedef enum {
-	DATA_PROCESSING = 0,
-	SINGLE_DATA_TRANSFER = 1,
-	BRANCH = 2,
-	MULTIPLY = 3,
-	TERMINATION = 4
+  DATA_PROCESSING = 0,
+  SINGLE_DATA_TRANSFER = 1,
+  BRANCH = 2,
+  MULTIPLY = 3,
+  TERMINATION = 4
 } Instruction_Type;
 
 typedef enum {
-	LSL = 0, /*logic left*/
-	LSR = 1, /*logic right*/
-	ASR = 2, /*arithmatic right*/
-	ROR = 3/*rotate right*/
+  LSL = 0, /*logic left*/
+  LSR = 1, /*logic right*/
+  ASR = 2, /*arithmatic right*/
+  ROR = 3/*rotate right*/
 } Shift_Type;
 
 typedef enum  {
-	EQ = 0,
-	NE = 1,
-	GE = 10,
-	LT = 11,
-	GT = 12,
-	LE = 13,
-	AL = 14
+  EQ = 0,
+  NE = 1,
+  GE = 10,
+  LT = 11,
+  GT = 12,
+  LE = 13,
+  AL = 14
 } Condition_Type;
 
 typedef enum {
-    AND = 0,
-    EOR = 1,
-    SUB = 2,
-    RSB = 3,
-    ADD = 4,
-    TST = 8,
-    TEQ = 9,
-    CMP = 10,
-    ORR = 12,
-    MOV = 13
+  AND = 0,
+  EOR = 1,
+  SUB = 2,
+  RSB = 3,
+  ADD = 4,
+  TST = 8,
+  TEQ = 9,
+  CMP = 10,
+  ORR = 12,
+  MOV = 13
 } Operation_Type;
-
-
 
 #endif
