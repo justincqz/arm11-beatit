@@ -1,8 +1,8 @@
 #include<stdint.h>
 #include<assert.h>
-#include"emustruct.h"
+#include"arm11struct.h"
 #include"emudecode.h"
-#include"emudef.h"
+#include"arm11def.h"
 
 
 

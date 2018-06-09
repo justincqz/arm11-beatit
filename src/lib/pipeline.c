@@ -1,11 +1,11 @@
 #include<stdint.h>
-#include"emustruct.h"
+#include"arm11struct.h"
 #include<assert.h>
 #include"emudecode.h"
 #include"emuexecute.h"
 #include"pipeline.h"
 #include<string.h>
-#include"emudef.h"
+#include"arm11def.h"
 
 
 void (*decode_functions[5]) (State_t *state) = {

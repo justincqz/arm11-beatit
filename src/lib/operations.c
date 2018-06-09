@@ -1,6 +1,6 @@
 #include "operations.h"
 #include<assert.h>
-#include "emudef.h"
+#include "arm11def.h"
 
 uint32_t (*operations[14]) (uint32_t, uint32_t, int32_t *, uint32_t *)= {
   and,

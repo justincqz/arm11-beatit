@@ -3,8 +3,8 @@
 #define ARM11_11_OPERATIONS_H
 
 #include<stdint.h>
-#include"emustruct.h"
-#include"emudef.h"
+#include"arm11struct.h"
+#include"arm11def.h"
 
 
 

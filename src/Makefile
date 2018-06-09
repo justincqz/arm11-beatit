@@ -1,20 +1,23 @@
-CC		= gcc
-CFLAGS	= -Wall -g std=c99 -Werror -pendantic -Iemulator
-LDLIBS 	= -Lemulator -lemulate 
-BUILD	= emulators assemblers emulate assemble
+CC = gcc
+CFLAGS = -Wall -Werror -pedantic -std=c99 -Ilib
+LDLIBS = -Llib -larm11
+BUILD  = 	libs emulate assemble
 
+all: $(BUILD) 
 
-all: $(BUILD)
+clean: 
+	/bin/rm -f $(BUILD) *.o core
 
-clean:
-	rm -f  $(BUILD) *.o core
+spotless: clean
+	cd lib; make clean
 
-spotless:	clean
-	cd emulator; make clean; cd ..; cd assembler; make clean
+libs: 
+	cd lib; make 
 
-emulators:
-	cd emulator; make;mv emulate .. 
+emulate: emulate.o
 
-assemblers:
-	cd assembler;make; mv assemble ..
-	
+emulate.o:
+
+assemble: assemble.o
+
+assemble.o: 

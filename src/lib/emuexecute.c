@@ -1,7 +1,7 @@
 /*cpsr checking*/
-#include"emustruct.h"
+#include"arm11struct.h"
 #include<stdint.h>
-#include"emudef.h"
+#include"arm11def.h"
 #include"emuexecute.h"
 #include<stdio.h>
 #include"operations.h"

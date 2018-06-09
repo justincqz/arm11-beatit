@@ -2,7 +2,7 @@
 #include<stdint.h>
 #include<assert.h>
 #include<stdlib.h>
-#include"emustruct.h"
+#include"arm11struct.h"
 #include"emuio.h"
 
 

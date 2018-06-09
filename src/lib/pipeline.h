@@ -1,8 +1,7 @@
 #ifndef PIPELINE_H
 #define PIPELINE_H
 
-#include "emustruct.h"
-#include "emudef.h"
+#include "arm11struct.h"
 #include "emudecode.h"
 #include "emuexecute.h"
 #include<stdint.h>

@@ -1,7 +1,7 @@
 #ifndef EMUEXECUTE_H
 #define EMUEXECUTE_H
-#include"emudef.h"
-#include"emustruct.h"
+#include"arm11def.h"
+#include"arm11struct.h"
 #include<assert.h>
 
 /*helper functinos*/
