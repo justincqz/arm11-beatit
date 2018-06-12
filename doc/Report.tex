@@ -1,21 +1,140 @@
-\documentclass[11pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Imperial Placement Report Template 
+% LaTeX Template
+% Version 1.0 (28/06/16)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	%%%%%%%%%
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
 
-\usepackage{fullpage}
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[toc,page]{appendix}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
 \begin{document}
 
-\title{Our Extension...}
-\author{TODO}
+\begin{titlepage}
 
-\maketitle
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+\setlength{\topmargin}{0in}
+\center % Center everything on the page
+ 
+ 
+ \begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\hspace*{-0.5cm}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.5\textwidth}
+\begin{flushright} \large
+\hspace*{2cm}
+% \includegraphics[scale=0.4]{company.png}\\
+\end{flushright}
+\end{minipage}\\[1cm]
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
 
-\section{Introduction}
+\textsc{\LARGE Imperial College of Science, Technology and Medicine}\\[1.5cm] % Name of your university/college
+\textsc{\Large Department of Computing}\\[0.5cm] % Major heading such as course name
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries BEATIT}\\[0.4cm] % Title of your document
+\HRule \\[1cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\textsc{{\large
+\textbf{Group 11} \\
+Yoram \textsc{Boccia}, \\
+Justin \textsc{Chong}, \\ 
+Halite \textsc{Abudureyimu}, \\
+Hadrian \textsc{Lim} }}\\[0.5cm]
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[0.5cm] % Date, change the \today to a set date if you want to be precise
+
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\newpage
+
+
+
+\section{Details About Assembler}
+There were several keywords that helped us to decompose the whole emulator, such as: $read and write$, $pipeline$, $alu$, $shifter$, $execute$, $decode$ and $fetch$. The spec helped us splitting the instructions into 4 main types. Thus, We use the keywords to structure the different files and the instructions types as switch to separate the different types. Then, Yoram and Halite discussed and confirmed over the details about the precoditions and postconditions of their own parts as following:
+\\\\
+\textbf{emulate.c:} the main functions is pretty straightforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new\_state$ and $delete\_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline\_circle$ functions in \textbf{pipeline.c}.
+\\\\
+\textbf{emuio.c:} contains 2 major functions: $emuread$ and $emuwrite$. \textbf{emuread} read the binary file and convert the binary numbers into decimal form and save it into our "memory".
+\textbf{emuwrite:} outputs the result of "registers" and "non-zero memory address".
+\\\\
+\textbf{pipeline.c} contains 4 major functions: $pipeline\_circle$, $execute$, $decode$, and $fetch$. The $pipeline\_circle$ uses the other 3 functions to simulate the process. $fetch$ get the instruction code from the "memory". $decode$ decomposes the fetched code into small parts according to 4 major instruction types by calling them in \textbf{emudecode.c}. Finally, $execute$ function passes the instruction and storage into 4 major instruction type execution coded in \textbf{emuexecute.c} .
+\\\\
+\textbf{emudecode.c} contains 4 major functions according to 4 different instruction types.
+\\\\
+\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute\_data\_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}\\
+\\\\
+\textbf{operation.c:} contains all the operations coming from the alu and the shifter.
+\\\\
+\textbf{emudef.h:} contains all the definitions of constant number and enum types in our emulator project.
+\\\\
+\textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new\_state$ and $delete\_state$ functions.
+
+\section{Details about the Extension}
+We decided to design a game. In this game there is a character, Michael Jackson, whose aim is to defeat every enemy who come from right or left. The user control the character through two buttons. The right button makes the character to punch and kick the enemy coming from the right and the left button makes the same on the left. We implemented a graphic interface for the game and the character has a fixed amount of lives before game over. 
+\\\\
+An example of the game is: 
+
+% insert video of the game!!!!
+
+\section{Design and Challenges/Problems}
+% TODO 
+Justin
+\\\\
+% TODO
+
+\section{Testing the Extension}
+We split the work into two parts and we have tested both of them. //need details
+\\\\
+Of course another difficulty is going to be the small amount of time we have for this project, and therefore we have to implement extensions that are doable before the deadline. Hence, we are going to plan first every detail of our extension and consider if it is possible to finish it before the time and then we will split the work between the four of us.
+
+\section{Group reflection}
+We worked really well together. From the beginning we communicated a lot. We understood the strengths of each member of the group and, accordingly, we split the different tasks throughout the implementation of the project. We started splitting the work since the beginning with the emulator and we found it very useful. Every while, we would meet all together to explain the progresses and to plan the next tasks. We used a lot git, where each of us worked on a different branch and then merge all the different parts together. 
+\\\\
+We believe that we communicated in a very efficient way and that the way we split the work was very helpful. Every time we had to implement another task, we would first analyze everything and build all together the structure of the project. Only when we were all sure to understand what was going on and that what we wanted to make was doable in the available time, only then we would start actually coding. We think that this tactics really helped us a lot and we always finished the different tasks before the deadlines we planned for ourselves. Moreover, we also organized football matches and dinner together to create a friendly atmosphere in the group and this helped a lot because we dealt with each part of the project with enthusiasm and every time one of us had problems, we would work together to solve them.
+
+\section{Individual reflection}
+\textbf{Halite:}\\
+I think we are cooperating with each other really well. Yoram and I did the first part, during the working period, we talked to each other alot. Especially during the debugging, we operated the computer in turns in every two hours, which was really helpful for our efficiency since debugging is really overwhelming job. In order to work together more effectively and delightfully, I assume that we can hang out together beyond the working time, like playing football.\\
+\\
+\textbf{Yoram:}\\
+I believe that we really worked proficiently together. I fitted in the group very well. I was really glad to see my WebPA feedbacks. I have never programmed in C before, as other members of my group, but all together we helped each other and we put a lot of effort in learning and in solving the different parts of the project. At the beginning I was a little bit scared because I did not know this programming language, but I was not the only one and I just had to work maybe harder at the beginning to learn it. Some of my strengths that I think really helped the group are the creativity, the fact that I want to have a clean and structured code, and the will to test every single function to be sure that everything works as we want.
+I would not change anything we did as a group because we had an efficient communication and we have split the work in a proficient way. With different people I would create again the same friendly environment in order to work well together. I would analyze the tasks before starting to implement them, I would plan some deadlines to respect and I would continue to use Git to split the work and then merge it. 
+\\\\
+\textbf{Justin:}\\
+Our team were quick to decide on splitting the work, and Hadrian and I were tasked with tackling the assembler. Overall, I think we had good team synergy. Parts that I found confusing, such as the move command register shifting, and the rotates for immediate addressing, were only possible to tackle with the help of my teammates. I think we are quite productive as a team, thanks to our constant communication and structured work schedules. Overall, we might need to get ready to modularise the projects even more as we move to part 3 and 4. Part 3 and 4 cannot be done concurrently, and are projected to be much harder than the first two parts. Overall, we would probably need to get to know each other a little more, to see where each individual is suited to do what tasks.\\
+\\
+\textbf{Hadrian:}\\
+Communication within the group has been smooth so far. The group has been able to meet the deadlines that we agreed upon so far. Criticism towards each other's work has been constructive and well received. We can easily approach members of our team if we have any queries regarding the C language. All in all, the team has a healthy dynamic that boosts productivity. For the future parts (III and IV), we will have to seperate the work initially, such that each of us do not depend on each other's code. If we depend too much on each other's implementations, we might end up having to wait for each other and slow down individual development.
+
 
 \end{document}
