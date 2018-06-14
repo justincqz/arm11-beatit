@@ -5,77 +5,48 @@
 #include "strutils.h"
 #include "arm11def.h"
 #include "arm11struct.h"
-#include "parseStr.h"
+#include "arm11io.h"
+#include "parsestr.h"
 #include "assencode.h"
 
-FILE* openFile(char *path);
 uint32_t* firstPass(Sym_t** symTable, FILE* fp);
 uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst);
-int writeFile(char* outFile, uint32_t* binTable, uint32_t noInst);
+void delete_symTable(Sym_t** symT, int size);
 
 int main(int argc, char **argv) {
   FILE* inpF;
   uint32_t* binT;
   uint32_t numInst;
-  //uint32_t sizeSymT;
+  size_t sizeSymT;
 
   if(argc != 3) {
       printf("Usage: %s <inputFile> <outputFile>\n", argv[0]);
       return -1;
   }
 
-  // Assuming that all files will have less than 32 labels
-  // TODO: Support more than 32 labels
   Sym_t** symT = calloc(32, sizeof(Sym_t*));
+  inpF = assread(argv[1]);
 
-  inpF = openFile(argv[1]);
-
-  // First pass, generates the symbol table and counts the number of instructions and size of symTable
+  // First pass
   uint32_t* out;
   out = firstPass(symT, inpF);
   numInst = out[0];
-  //sizeSymT = out[1];
+  sizeSymT = out[1];
 
-  // Second pass, generates the array of bitcodes to write to file
+  // Second pass
   binT = secondPass(symT, inpF, &numInst);
   fclose(inpF);
 
-
-
   // Write binary file
-  writeFile(argv[2], binT, numInst);
-  
+  asswrite(argv[2], binT, numInst);
+
   free(out);
   free(binT);
-  for (int i = 0; i < 32; i ++) {
-    delete_symbol(symT[i]);
-  }
-  free(symT);
+  delete_symTable(symT, sizeSymT);
   return EXIT_SUCCESS;
 }
 
-FILE* openFile(char *path){
-  FILE* fp = fopen(path, "r");
-  if(fp == NULL) {
-    perror("Error opening file.\n");
-    exit(EXIT_FAILURE);
-  }
-
-  return fp;
-}
-
-  int writeFile(char* outFile, uint32_t* binTable, uint32_t noInst){
-  FILE* fp = fopen(outFile, "wb");
-  if (fp == NULL) {
-    perror("No such file");
-    exit(EXIT_FAILURE);
-}
-
-  fwrite(binTable, sizeof(uint32_t), noInst, fp);
-  fclose(fp);
-  return 0;
-}
-
+// Generates the symbol table, counts the number of lines and size of symTable
 uint32_t* firstPass(Sym_t** symTable, FILE* fp) {
   uint32_t lineNum = 0;
   int currSym = 0;
@@ -95,22 +66,22 @@ uint32_t* firstPass(Sym_t** symTable, FILE* fp) {
     }
   }
 
-
   free(currStr);
-
   uint32_t* out = calloc(2, sizeof(uint32_t));
   out[0] = lineNum;
   out[1] = currSym;
   return out;
 }
 
-// Returns an array of 32 byte
+// Generates the array of bitcodes to write to file
 uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst){
   uint32_t totalSize = *noInst;
+
   if(fseek(fp, 0, SEEK_SET) == -1) {
     perror("File IO has failed.");
     exit(EXIT_FAILURE);
-}
+  }
+
   char* currStr = calloc(512, sizeof(char));
   uint32_t* byteTable = calloc(totalSize, sizeof(uint32_t));
   int lineNum = 0;
@@ -118,7 +89,6 @@ uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst){
 
   while (fgets(tmp, 512, fp) != NULL) {
     tmp = cleanDelim(tmp, " \n");
-
     if (*tmp == '\0') {
       continue;
     }
@@ -127,18 +97,16 @@ uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst){
     }
 
     printf("Current Inp: %s\n", tmp);
-    // Empty line, go to next
     if(chrExists(tmp, ':') == 0) {
       uint32_t *sdtAppend = calloc(1, sizeof(uint32_t));
       byteTable[lineNum] = parseStr(tmp, symTable, lineNum, totalSize, sdtAppend);
 
-        // If a sdt instruction was called
       if (sdtAppend[0] != 0) {
         byteTable = realloc(byteTable, sizeof(uint32_t) * (totalSize + 1));
         byteTable[totalSize] = sdtAppend[0];
-        *noInst = totalSize + 1;
-        totalSize = *noInst;
+        *noInst = ++totalSize;
       }
+      
       lineNum++;
       free(sdtAppend);
     }
@@ -151,4 +119,5 @@ void delete_symTable(Sym_t** symT, int size) {
   for(int i = 0; i < size; i++) {
     delete_symbol(symT[i]);
   }
+  free(symT);
 }

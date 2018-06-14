@@ -3,8 +3,7 @@
 #include<assert.h>
 #include<stdlib.h>
 #include"arm11struct.h"
-#include"emuio.h"
-
+#include"arm11io.h"
 
 
 void emuread(char *fileName, State_t *state) {
@@ -20,14 +19,14 @@ void emuread(char *fileName, State_t *state) {
   fseek(file, 0, SEEK_END);
   lengthFile = (unsigned long) ftell(file);
   fseek(file, 0, SEEK_SET);
-  
+
   //printf("length of file is %ld\n", lengthFile);
   size_t size = lengthFile/INSTRUCTION_BYTE;
   assert(size <= MEMORY_SIZE);
   state->instructions_size = size;
 
   for (int i = 0; i < size; i++) {
-    fread(state->storage->mem+i, sizeof(uint32_t),1,file);  
+    fread(state->storage->mem+i, sizeof(uint32_t),1,file);
   }
 
   fclose(file);
@@ -62,3 +61,24 @@ void emuwrite(Storage_t *storage) {
   }
 }
 
+FILE* assread(char *path) {
+  FILE* fp = fopen(path, "r");
+  if(fp == NULL) {
+    perror("Error opening file.\n");
+    exit(EXIT_FAILURE);
+  }
+
+  return fp;
+}
+
+int asswrite(char* outFile, uint32_t* binTable, uint32_t noInst) {
+  FILE* fp = fopen(outFile, "wb");
+  if (fp == NULL) {
+    perror("No such file");
+    exit(EXIT_FAILURE);
+  }
+
+  fwrite(binTable, sizeof(uint32_t), noInst, fp);
+  fclose(fp);
+  return 0;
+}

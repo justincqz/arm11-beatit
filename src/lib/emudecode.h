@@ -4,7 +4,7 @@
 #include <math.h>
 #include <assert.h>
 #include "arm11struct.h"
-#include "emuio.h"
+#include "arm11io.h"
 #include "emudecode.h"
 #include "arm11def.h"
 
