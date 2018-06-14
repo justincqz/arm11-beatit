@@ -15,19 +15,14 @@ Error execute_data_processing(State_t *state) {
   return SUCCESS;
 }
 
-
-
 Error execute_multiply(State_t *state) {
   int32_t *reg = state->storage->reg;
   Instruction_t *ins = state->decoded_ins;
-    /*start code*/
   reg[ins->rd] = reg[ins->rm]*reg[ins->rs];
   reg[ins->rd] += ins->a? reg[ins->rs]: 0;
   return SUCCESS;
 }
 
-
-/*need to debug*/
 Error execute_single_data_transfer(State_t *state){
   int32_t *reg = state->storage->reg;
   int32_t *mem = state->storage->mem;
@@ -36,19 +31,18 @@ Error execute_single_data_transfer(State_t *state){
     printf("Invalid Instruction\n");
     return FAILURE;
   }
-    
+
   if (ins->p == 0 && ins->rm == ins->rd) {
     printf("Invalid Instruction\n");
     return FAILURE;
   }
 
-    /*start code*/
   uint32_t offset = ins->imm;
   if (ins->i) {
     uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
     offset = shift(reg[ins->rm], gap, ins->shift_type, reg + CPSR_REG, ins->s);
   }
-    
+
   uint32_t mem_add = (uint32_t) reg[ins->rn];
   if(ins->p) {
     if(ins->u) {
@@ -57,9 +51,8 @@ Error execute_single_data_transfer(State_t *state){
       mem_add -= offset;
     }
   }
-    
+
   int32_t *location = (int32_t *) ((char *) mem + mem_add);
-  /*need to recheck the bound*/ 
   if (location >= mem + MEMORY_SIZE) {
     switch (mem_add) {
       case GPIO0_9:
@@ -92,7 +85,7 @@ Error execute_single_data_transfer(State_t *state){
   } else {
     *location = reg[ins->rd];
   }
-    
+
   if(!ins->p) {
     if(ins->u) {
       reg[ins->rn] += offset;
@@ -102,14 +95,11 @@ Error execute_single_data_transfer(State_t *state){
   }
   return SUCCESS;
 }
-    
-   
-/*whether or not affect cpsr*/
-Error execute_branch(State_t *state){    
+
+Error execute_branch(State_t *state){
   int32_t *reg = state->storage->reg;
   Instruction_t *ins = state->decoded_ins;
 
-  /*start code*/
   uint32_t offset = ins->address;
   if ( offset & BRANCH_SIGNED_MASK) { /*1 << 23*/
       offset |= BRANCH_EXTENSION;/*((1 << 9) - 1) << 23*/
@@ -129,10 +119,8 @@ Error execute_termination(State_t *state) {
 
 uint32_t calculate_imm(Instruction_t *ins, int32_t *reg) {
   if(ins->i) {
-    return shift ( (ins->imm), ins->rotate << 1, ROR, reg + CPSR_REG,ins->s); /*need to check*/
+    return shift ( (ins->imm), ins->rotate << 1, ROR, reg + CPSR_REG,ins->s);
   }
   uint32_t gap = ins->o? (reg[ins->rs]&0xf): ins->shift_constant;
   return shift(reg[ins->rm], gap, ins->shift_type, reg + CPSR_REG,ins->s);
 }
-
-

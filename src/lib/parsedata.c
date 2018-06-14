@@ -51,7 +51,7 @@ Instruction_t* parseImmediate(char* inp, Instruction_t* ins) {
   // Deal with rotations if it is address mode (8 bits)
   if ((ins->i && ins->instruction_type == SINGLE_DATA_TRANSFER) ||
     (!ins->i && ins->instruction_type == DATA_PROCESSING)) {
-    
+
     ins->o = 0;
     if (res > 31) {
       perror("Cannot represent register shift within 5 bits\n");
@@ -190,7 +190,6 @@ uint32_t parseDataCmd(char* inp, Operation_Type opType) {
   return res;
 }
 
-// Will be moved to a new file
 uint32_t parseSDTCmd(char* inp, uint32_t* append, int off) {
   Instruction_t* ins = new_instruction();
   ins->instruction_type = SINGLE_DATA_TRANSFER;
@@ -269,7 +268,6 @@ uint32_t parseSDTCmd(char* inp, uint32_t* append, int off) {
   return res;
 }
 
-//Will be moved to a new file
 uint32_t multCmd(char* inp) {
   Instruction_t* ins = new_instruction();
   strtok(inp, " r,\n");
@@ -313,9 +311,8 @@ uint32_t lslCmd(char* inp) {
   return res;
 }
 
-// TODO: Assumes a symTable size of 32 for now.
-uint8_t lookUpLineNum(Sym_t** symTable, char* name) {
-  for (int i = 0; i < 32; i++) {
+uint8_t lookUpLineNum(Sym_t** symTable, char* name, size_t sizeOfSymT) {
+  for (int i = 0; i < sizeOfSymT; i++) {
     if (strcmp(symTable[i]->name, name) == 0) {
       return symTable[i]->lineNum;
     }
@@ -323,11 +320,11 @@ uint8_t lookUpLineNum(Sym_t** symTable, char* name) {
   return -1;
 }
 
-uint32_t branchCmd(char* inp, Sym_t** symT, Condition_Type cond, int currLine) {
+uint32_t branchCmd(char* inp, Sym_t** symT, Condition_Type cond, int currLine, size_t sizeOfSymT) {
   Instruction_t* ins = new_instruction();
   strtok(inp, " ");
   char* label = stripStr(strtok(NULL, " "), '\n');
-  int32_t offset = lookUpLineNum(symT, label) - (currLine + 2);
+  int32_t offset = lookUpLineNum(symT, label, sizeOfSymT) - (currLine + 2);
   uint32_t addr = offset & (0x00FFFFFF);
 
   ins->instruction_type = BRANCH;

@@ -19,11 +19,9 @@ uint32_t (*operations[14]) (uint32_t, uint32_t, int32_t *, uint32_t *)= {
   mov
 };
 
-uint32_t directshift[4] = { 5, 6, 7, 11}; 
+uint32_t directshift[4] = { 5, 6, 7, 11};
 
-//update the cpsr according to the spec
 void change_cpsr(int32_t a, int32_t *cpsr,int32_t c) {
-  //assert(cpsr);
   uint32_t tmp = (uint32_t) *cpsr;
   uint32_t ua = (uint32_t) a;
   uint32_t nzcv = (ua >> N_BIT);
@@ -112,17 +110,13 @@ uint32_t ror(uint32_t a, uint32_t b, int32_t *d, uint32_t *c) {
   return (a >> b) | tmp;
 }
 
-
-
-//execute alu according to the opcode and the spec, and update the cpsr
 void alu_execute(Operation_Type opcode,uint32_t a, uint32_t b, int32_t *d, int32_t *cpsr,uint32_t s) {
   uint32_t dd,c;
-  dd = operations[opcode](a,b,d,&c); 
+  dd = operations[opcode](a,b,d,&c);
   if(s){
     change_cpsr(dd,cpsr,c);
   }
 }
-
 
 uint32_t shift( uint32_t a,  uint32_t b, Shift_Type type, int32_t *cpsr,uint32_t s) {
   assert(cpsr);
@@ -134,7 +128,3 @@ uint32_t shift( uint32_t a,  uint32_t b, Shift_Type type, int32_t *cpsr,uint32_t
   }
   return res;
 }
-
-
-
-

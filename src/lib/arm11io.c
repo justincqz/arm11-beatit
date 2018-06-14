@@ -6,7 +6,7 @@
 #include"arm11io.h"
 
 
-void emuread(char *fileName, State_t *state) {
+void emu_read(char *fileName, State_t *state) {
   FILE *file;
   size_t lengthFile;
   file = fopen(fileName, "rb");
@@ -33,7 +33,7 @@ void emuread(char *fileName, State_t *state) {
   return;
 }
 
-void emuwrite(Storage_t *storage) {
+void emu_write(Storage_t *storage) {
   assert(storage != NULL);
   printf("Registers:\n");
   for (int i = 0; i < 13; i++) {
@@ -61,7 +61,7 @@ void emuwrite(Storage_t *storage) {
   }
 }
 
-FILE* assread(char *path) {
+FILE* ass_read(char *path) {
   FILE* fp = fopen(path, "r");
   if(fp == NULL) {
     perror("Error opening file.\n");
@@ -71,7 +71,7 @@ FILE* assread(char *path) {
   return fp;
 }
 
-int asswrite(char* outFile, uint32_t* binTable, uint32_t noInst) {
+int ass_write(char* outFile, uint32_t* binTable, uint32_t noInst) {
   FILE* fp = fopen(outFile, "wb");
   if (fp == NULL) {
     perror("No such file");

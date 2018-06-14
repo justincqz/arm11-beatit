@@ -1,12 +1,12 @@
-#include<stdint.h>
-#include"arm11struct.h"
-#include<assert.h>
-#include"emudecode.h"
-#include"emuexecute.h"
-#include"pipeline.h"
-#include<string.h>
-#include"arm11def.h"
-#include"arm11utils.h"
+#include <stdint.h>
+#include "arm11struct.h"
+#include <assert.h>
+#include "emudecode.h"
+#include "emuexecute.h"
+#include "pipeline.h"
+#include <string.h>
+#include "arm11def.h"
+#include "arm11utils.h"
 
 void (*decode_functions[5]) (State_t *state) = {
   decode_data_processing,

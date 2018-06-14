@@ -10,7 +10,7 @@
 #include "assencode.h"
 
 uint32_t* firstPass(Sym_t** symTable, FILE* fp);
-uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst);
+uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst, size_t sizeOfSymT);
 void delete_symTable(Sym_t** symT, int size);
 
 int main(int argc, char **argv) {
@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   }
 
   Sym_t** symT = calloc(32, sizeof(Sym_t*));
-  inpF = assread(argv[1]);
+  inpF = ass_read(argv[1]);
 
   // First pass
   uint32_t* out;
@@ -34,11 +34,11 @@ int main(int argc, char **argv) {
   sizeSymT = out[1];
 
   // Second pass
-  binT = secondPass(symT, inpF, &numInst);
+  binT = secondPass(symT, inpF, &numInst, sizeSymT);
   fclose(inpF);
 
   // Write binary file
-  asswrite(argv[2], binT, numInst);
+  ass_write(argv[2], binT, numInst);
 
   free(out);
   free(binT);
@@ -74,7 +74,7 @@ uint32_t* firstPass(Sym_t** symTable, FILE* fp) {
 }
 
 // Generates the array of bitcodes to write to file
-uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst){
+uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst, size_t sizeOfSymT){
   uint32_t totalSize = *noInst;
 
   if(fseek(fp, 0, SEEK_SET) == -1) {
@@ -83,7 +83,7 @@ uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst){
   }
 
   char* currStr = calloc(512, sizeof(char));
-  uint32_t* byteTable = calloc(totalSize, sizeof(uint32_t));
+  uint32_t* binArray = calloc(totalSize, sizeof(uint32_t));
   int lineNum = 0;
   char *tmp = currStr;
 
@@ -99,20 +99,20 @@ uint32_t* secondPass(Sym_t** symTable, FILE* fp, uint32_t* noInst){
     printf("Current Inp: %s\n", tmp);
     if(chrExists(tmp, ':') == 0) {
       uint32_t *sdtAppend = calloc(1, sizeof(uint32_t));
-      byteTable[lineNum] = parseStr(tmp, symTable, lineNum, totalSize, sdtAppend);
+      binArray[lineNum] = parseStr(tmp, symTable, lineNum, totalSize, sdtAppend, sizeOfSymT);
 
       if (sdtAppend[0] != 0) {
-        byteTable = realloc(byteTable, sizeof(uint32_t) * (totalSize + 1));
-        byteTable[totalSize] = sdtAppend[0];
+        binArray = realloc(binArray, sizeof(uint32_t) * (totalSize + 1));
+        binArray[totalSize] = sdtAppend[0];
         *noInst = ++totalSize;
       }
-      
+
       lineNum++;
       free(sdtAppend);
     }
   }
   free(currStr);
-  return byteTable;
+  return binArray;
 }
 
 void delete_symTable(Sym_t** symT, int size) {

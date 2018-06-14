@@ -4,41 +4,41 @@
 #include <stdlib.h>
 #include <string.h>
 
-uint32_t parseStr(char* inp, Sym_t* symT, int currLine, int numInst, uint32_t* sdtAppend) {
+uint32_t parseStr(char* inp, Sym_t* symT, int currLine, int numInst, uint32_t* sdtAppend, size_t sizeOfSymT) {
   char secChar = inp[1];
   char thirdChar = inp[2];
   switch(*inp) {
-    
+
     case 'b':
-      switch(secChar) { 
+      switch(secChar) {
         case 'l':
           if(thirdChar == 't') {
-            return branchCmd(inp, symT, LT, currLine);
+            return branchCmd(inp, symT, LT, currLine, sizeOfSymT);
           } else {
-            return branchCmd(inp, symT, LE, currLine);
+            return branchCmd(inp, symT, LE, currLine, sizeOfSymT);
           }
-        
+
         case 'g':
           if(thirdChar == 't') {
-            return branchCmd(inp, symT, GT, currLine);
+            return branchCmd(inp, symT, GT, currLine, sizeOfSymT);
           } else {
-            return branchCmd(inp, symT, GE, currLine);
+            return branchCmd(inp, symT, GE, currLine, sizeOfSymT);
           }
-        
+
         case 'n':
-          return branchCmd(inp, symT, NE, currLine);
+          return branchCmd(inp, symT, NE, currLine, sizeOfSymT);
 
         case 'e':
-          return branchCmd(inp, symT, EQ, currLine);
+          return branchCmd(inp, symT, EQ, currLine, sizeOfSymT);
 
         case ' ':
-          return branchCmd(inp, symT, AL, currLine);
+          return branchCmd(inp, symT, AL, currLine, sizeOfSymT);
 
         default:
           exit(EXIT_FAILURE);
       }
 
-    
+
     case 'a':
       switch(secChar) {
         case 'n':
