@@ -50,7 +50,7 @@
 %----------------------------------------------------------------------------------------
 
 \HRule \\[0.4cm]
-{ \huge \bfseries BEATIT}\\[0.4cm] % Title of your document
+{ \huge \bfseries BeatIt}\\[0.4cm] % Title of your document
 \HRule \\[1cm]
  
 %----------------------------------------------------------------------------------------
@@ -80,42 +80,68 @@ Hadrian \textsc{Lim} }}\\[0.5cm]
 
 
 \section{Details About Assembler}
-There were several keywords that helped us to decompose the whole emulator, such as: $read and write$, $pipeline$, $alu$, $shifter$, $execute$, $decode$ and $fetch$. The spec helped us splitting the instructions into 4 main types. Thus, We use the keywords to structure the different files and the instructions types as switch to separate the different types. Then, Yoram and Halite discussed and confirmed over the details about the precoditions and postconditions of their own parts as following:
+The Assembler can be split into to main loops, the first pass, and the second. In the first pass, the assembler builds the symbol table to be used for branching, and also initializes several parameters to be used in the second pass such as the number of instructions, etc. The second pass goes through and dynamically parses each instruction, and uses conditional branching to split the flow of logic to it's respective ARM instruction subset ($Data\ Processing$, $Multiply$, $Single\ Data\ Transfers$, and $Branching$).
 \\\\
-\textbf{emulate.c:} the main functions is pretty straightforward: allocate memory to state, read binary, simulate the pipeline, and write out the result. So it calls $new\_state$ and $delete\_state$ in \textbf{emustruct.c}, $emuread$ and $emuwrite$ f in \textbf{emuio.c}, and $pipeline\_circle$ functions in \textbf{pipeline.c}.
+The data structures used throughout the assembler are as follows: The symbol table is stored as an array of $symbol$ structs, each containing the label, and it's corresponding line number. The instruction binary data is stored as an array of unsigned 32 bit integers.
 \\\\
-\textbf{emuio.c:} contains 2 major functions: $emuread$ and $emuwrite$. \textbf{emuread} read the binary file and convert the binary numbers into decimal form and save it into our "memory".
-\textbf{emuwrite:} outputs the result of "registers" and "non-zero memory address".
+\textbf{assemble.c:} Entry point of the assembler, which defines the logic for the first and second passes. It handles line by line file IO and passes it into the first pass and second pass functions. The function then calls the $parseString$ function from \textbf{parseStr.c}, and passes the return value from the parser to be encoded by \textbf{assencode.c}. It stores the resulting binary output into the $uint32\_t$ array, and writes it to the output file after parsing all instructions.
 \\\\
-\textbf{pipeline.c} contains 4 major functions: $pipeline\_circle$, $execute$, $decode$, and $fetch$. The $pipeline\_circle$ uses the other 3 functions to simulate the process. $fetch$ get the instruction code from the "memory". $decode$ decomposes the fetched code into small parts according to 4 major instruction types by calling them in \textbf{emudecode.c}. Finally, $execute$ function passes the instruction and storage into 4 major instruction type execution coded in \textbf{emuexecute.c} .
+\textbf{parseStr.c:} Identifies the assembly instruction via character matching of the input string. It then calls the corresponding function from \textbf{parseData.c} whilst passing in relevant parameters based on the input string (such as opcode).
 \\\\
-\textbf{emudecode.c} contains 4 major functions according to 4 different instruction types.
+\textbf{parseData.c:} Takes in parameters and wraps it in the instruction struct, to be encoded into binary by \textbf{assencode.c}.
 \\\\
-\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute\_data\_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}\\
+\textbf{assencode.c:} HADRIAN LIM.
 \\\\
-\textbf{operation.c:} contains all the operations coming from the alu and the shifter.
-\\\\
-\textbf{emudef.h:} contains all the definitions of constant number and enum types in our emulator project.
-\\\\
-\textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new\_state$ and $delete\_state$ functions.
+\textbf{strutils.c:} Contains several helper functions that helps string parsing. 
 
 \section{Details about the Extension}
-We decided to design a game. In this game there is a character, Michael Jackson, whose aim is to defeat every enemy who come from right or left. The user control the character through two buttons. The right button makes the character to punch and kick the enemy coming from the right and the left button makes the same on the left. We implemented a graphic interface for the game and the character has a fixed amount of lives before game over. 
+We decided to design a game. In this game there is a character, Michael Jackson, whose aim is to defeat every enemy who come from right or left. The user control the game through five buttons. The right button makes the character to punch and kick the enemy coming from the right and the left button makes the same on the left. We implemented a graphic interface for the game and the character has a fixed amount of lives before game over. 
 \\\\
-An example of the game is: 
+An example of the game is: \\\\
+% insert Demo of the game!!!!
+\textbf{Controller}\\\\
+\textbf{1.Abstract:}  Yoram and Halite did the controller part of our extension. In this part, we enabled Raspberry Pi to an bluetooth joystick emulator, so that if we pressed the bottoms on our “Joystick”, we can control the action of our main character in our BEATIT game. For this part we follow the “Emulate a Bluetooth keyboard with the Raspberry Pi” tutorial and make some changes to it. 
+For the programming part, we choose python language to code our program, since there are plenty of libraries we can use to build our controller in a really limited time. None of use have learned Python before, so we spent three days to learn the python’s syntax and useful functions.
+\\\\
+\textbf{2.Hardware:}\\
+1) A Raspberry Pi with all necessary peripherals   \\\\
+2) A USB Bluetooth dongle \\\\
+3) A USB hub – if you want to use a keyboard and mouse at the same time as the Bluetooth dongle  \\\\
+4) 5 button switch (emulate A, S, W, E, Q riespectively).  \\\\
+\textbf{3.Files:} \\\\
+\textbf{1) kbclient.py :}\\
+a) connection between Pi and PC. We use bluetooth dongle as a connection device and D-Bus as the communication interface by using SDP(Service Discovery Protocal)
+\\\\
+b) get input from pi: We import RPi.GPIO library to setup and read our inputs. And use keymap.py file to convert our input into codes which is compatible to the D-BUS SDP fromat.
+\\\\
+c) sending input:	this part is simple, after getting the correct sending format, simple use cinterrupt.send(str) to send our input to the server, and our pc would get the signal from it.
+\\\\
+\textbf{2) keymap.py:} This file contains a dictionary mapping evdev keys to Bluetooth keys \\
+sendingstring.py and btkserver.py: we use the authors code, the details is in the references.
+\\\\
+\textbf{4.Testing:} After coding, we tried to connect our pi to different devices: Linux, Windows, Mac PCs and Android and IOS phones. The connection overall is stable and suitable for the above devices. The effect of pressing the buttons are stable, correct and instance.
+\\\\
+\textbf{5.Definations:} \\\\
+\textbf{1) D-Bus:} it is a framework used commonly on Linux that allows communication and remote procedure calls (calling a function in a different program) between different processes. \\\\
+\textbf{2) SDP:} The Session Description Protocol (SDP) is a format for describing streaming media communications parameters. 
+\\\\
+\textbf{6.Reference:}\\
+https://www.gadgetdaily.xyz/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/\\
+http://mlabviet2016.blogspot.com/2017/09/make-raspberry-pi3-as-emulator.html\\
+https://en.wikipedia.or/wiki/Session\_Description\_Protocol\\
+https://impythonist.wordpress.com/2014/02/01/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/\\
 
-% insert video of the game!!!!
 
 \section{Design and Challenges/Problems}
-% TODO 
-Justin
+\textbf{rendering:} It was difficult to find an appropriate graphics library that could be light weight, support a multitude of platforms, whilst using the standard libraries (as we decided not to use libraries that aren't installed in lab machines). Eventually we managed to find and slightly modify an libX11 wrapper, that was very lightweight and supported simple input output detection. The bare bone nature of the library made it inefficient, which eventually led to the slowdown of the application on Lab computers, requiring us to optimize the rendering process. 
 \\\\
+\textbf{audio:} It was near impossible to find a C audio library that could handle cross platform file parsing and audio playback. We eventually decided to rely on the built in SDL2.
 % TODO
 
 \section{Testing the Extension}
 We split the work into two parts and we have tested both of them. //need details
 \\\\
-Of course another difficulty is going to be the small amount of time we have for this project, and therefore we have to implement extensions that are doable before the deadline. Hence, we are going to plan first every detail of our extension and consider if it is possible to finish it before the time and then we will split the work between the four of us.
+
 
 \section{Group reflection}
 We worked really well together. From the beginning we communicated a lot. We understood the strengths of each member of the group and, accordingly, we split the different tasks throughout the implementation of the project. We started splitting the work since the beginning with the emulator and we found it very useful. Every while, we would meet all together to explain the progresses and to plan the next tasks. We used a lot git, where each of us worked on a different branch and then merge all the different parts together. 
@@ -124,7 +150,9 @@ We believe that we communicated in a very efficient way and that the way we spli
 
 \section{Individual reflection}
 \textbf{Halite:}\\
-I think we are cooperating with each other really well. Yoram and I did the first part, during the working period, we talked to each other alot. Especially during the debugging, we operated the computer in turns in every two hours, which was really helpful for our efficiency since debugging is really overwhelming job. In order to work together more effectively and delightfully, I assume that we can hang out together beyond the working time, like playing football.\\
+I personlly believe that this project is one of the greatest experience in my life. Because during this period, I learned lots of communication skills, programming cooperation techniques, as well as usefull project developing knowledge. For example, I learned how to use git lab/hub efficiently with my teammates. Also, I learned how the network connection works and what is D-Bus, SDP. Furthurmore, I acquired some electrical components and curcuits knowledge.\\\\
+Speaking of our team, I think we did a really great job. None of us had the experience of group project before, but we did it, we managed to develop a game and blutooth joystick in really limited time. I think for a buch of beginners it is not easy. All of the members worked so hard, learned lots of new knowledge, and made a really great contribution to the project. Thanks for the department give us this opportunity and thanks for my teammates.
+\\
 \\
 \textbf{Yoram:}\\
 I believe that we really worked proficiently together. I fitted in the group very well. I was really glad to see my WebPA feedbacks. I have never programmed in C before, as other members of my group, but all together we helped each other and we put a lot of effort in learning and in solving the different parts of the project. At the beginning I was a little bit scared because I did not know this programming language, but I was not the only one and I just had to work maybe harder at the beginning to learn it. Some of my strengths that I think really helped the group are the creativity, the fact that I want to have a clean and structured code, and the will to test every single function to be sure that everything works as we want.
