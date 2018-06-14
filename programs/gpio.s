@@ -9,17 +9,18 @@ loop:
 
 str r1,[r0,#40]
 mov r2,#0xF0000
-wait1:
+
+offloop:
 sub r2,r2,#1
 cmp r2,#0
-bne wait1
+bne offloop
 
 str r1,[r0,#28]
-
 mov r2,#0xF0000
-wait2:
+
+onloop:
 sub r2,r2,#1
 cmp r2,#0
-bne wait2
+bne onloop
 
 b loop
