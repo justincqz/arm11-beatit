@@ -3,7 +3,7 @@ CFLAGS  = -Wall -g -std=c99 -Werror -pedantic
 LIB     = libarm11.a
 EMUOBJS = pipeline.o arm11io.o emudecode.o emuexecute.o operations.o
 ASSOBJS = parsedata.o parsestr.o assencode.o strutils.o
-COMOBJS = arm11struct.o
+COMOBJS = arm11struct.o arm11utils.o
 LIBOBJS = $(COMOBJS) $(EMUOBJS) $(ASSOBJS)
 BUILD   = $(LIB)
 
@@ -25,6 +25,8 @@ emudecode.o: emudecode.h
 emuexecute.o: emuexecute.h
 
 arm11struct.o: arm11struct.h
+
+arm11utils.o: arm11utils.h
 
 operations.o: operations.h
 

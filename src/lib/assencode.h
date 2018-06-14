@@ -1,6 +1,6 @@
 #include "arm11struct.h"
 
-uint32_t setBits(uint32_t num, uint32_t lowerBit, uint32_t upperBit, uint32_t val);
+uint32_t set_bits(uint32_t num, uint32_t lowerBit, uint32_t upperBit, uint32_t val);
 
 uint32_t encode(Instruction_t* ins);
 
