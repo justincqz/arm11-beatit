@@ -5,7 +5,6 @@
 #include"arm11def.h"
 #include"arm11utils.h"
 
-//decode the first four bits, the condition part
 void decode_cond_instruction(register uint32_t code, Instruction_t *ins) {
   ins->n = extract_bits(code, N_BIT, N_BIT);
   ins->z = extract_bits(code, Z_BIT, Z_BIT);
@@ -14,7 +13,6 @@ void decode_cond_instruction(register uint32_t code, Instruction_t *ins) {
   ins->cond = ((((((ins->n << 1)|ins->z)) << 1)|ins->c) << 1) | ins->v;
 }
 
-//decode data processing according to the spec
 void decode_data_processing(State_t *state) {
   Instruction_t *ins = state->decoded_ins;
   uint32_t code = state->fetched_code;
@@ -42,7 +40,6 @@ void decode_data_processing(State_t *state) {
   }
 }
 
-//decode multiply according to the spec
 void decode_multiply(State_t *state) {
   Instruction_t *ins = state->decoded_ins;
   uint32_t code = state->fetched_code;
@@ -55,7 +52,6 @@ void decode_multiply(State_t *state) {
   ins->rm = extract_bits(code, RM_LOWER_BIT, RM_UPPER_BIT);
 }
 
-//decode single data transfer according to the spec
 void decode_single_data_transfer(State_t *state){
   Instruction_t *ins = state->decoded_ins;
   uint32_t code = state->fetched_code;
@@ -80,7 +76,6 @@ void decode_single_data_transfer(State_t *state){
   }
 }
 
-//decode branch according to the spec
 void decode_branch(State_t *state) {
   decode_cond_instruction(state->fetched_code, state->decoded_ins);
   state->decoded_ins->address = extract_bits(state->fetched_code, BIT_ZERO, ADDRESS_UPPER_BIT);

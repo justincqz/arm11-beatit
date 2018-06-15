@@ -39,7 +39,6 @@ uint32_t encode_data_processing(Instruction_t* ins) {
   return res;
 }
 
-//decode multiply according to the spec
 uint32_t encode_multiply(Instruction_t *ins) {
   uint32_t res = 0;
   res = set_bits(res, COND_LOWER_BIT, COND_UPPER_BIT, ins->cond);
@@ -54,7 +53,6 @@ uint32_t encode_multiply(Instruction_t *ins) {
   return res;
 }
 
-//decode single data transfer according to the spec
 uint32_t encode_single_data_transfer(Instruction_t* ins) {
   uint32_t res = 0;
   res = set_bits(res, COND_LOWER_BIT, COND_UPPER_BIT, ins->cond);
@@ -82,7 +80,6 @@ uint32_t encode_single_data_transfer(Instruction_t* ins) {
   return res;
 }
 
-//decode branch according to the spec
 uint32_t encode_branch(Instruction_t* ins) {
   uint32_t res = 0;
   res = set_bits(res, COND_LOWER_BIT, COND_UPPER_BIT, ins->cond);
