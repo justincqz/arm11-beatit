@@ -15,7 +15,7 @@
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[toc,page]{appendix}
 \usepackage[T1]{fontenc}
-\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
 
 \begin{document}
 
@@ -83,7 +83,9 @@ Halite Abudureyimu and Yoram Boccia co-worked on Part 1: the emulator. Halite de
 \\\\
 Justin Chong and Hadrian Lim co-worked on the second part: the assembler. Justin outlined the structure of the assembler. He implemented the assembler IO and the logic behind parsing string tokens and arranging the bitcodes. He also implemented a dynamic memory access structure to maintain minimal memory cost and reduce input-output overhead. Hadrian Lim implemented key utility functions such as the lookup, extractBits functions. He also helped encode and decode the binary instructions. Debugging and testing was done together by Hadrian and Justin.
 \\\\
-While we were progressing with the project, we used GitLab to combine our work. We did so by pushing up the codes to our own branches, where the group leader was then responsible for merging and maintaining the different codes accordingly. We finished coding the emulator in 26-05-2018. We are now completing the assembler part. We plan to finish the third part and start to work on the fourth part before 02-06-2018.
+We all worked together on the third part and for the extension we split the work again into two parts. Yoram Boccia and Halite Abudureyimu worked on the controller, whilst Justin Chong and Hadrian Lim implemented the game and its structure.  
+\\\\
+While we were progressing with the project, we used GitLab to combine our work. We did so by pushing up the codes to our own branches, where the group leader was then responsible for merging and maintaining the different codes accordingly.
 
 \section{Opinions about Group Working}
 \textbf{Halite:}\\
@@ -111,7 +113,7 @@ There were several keywords that helped us to decompose the whole emulator, such
 \\\\
 \textbf{emudecode.c} contains 4 major functions according to 4 different instruction types.
 \\\\
-\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute\_data\_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}\\
+\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute\_data\_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}
 \\\\
 \textbf{operation.c:} contains all the operations coming from the alu and the shifter.
 \\\\
@@ -119,18 +121,10 @@ There were several keywords that helped us to decompose the whole emulator, such
 \\\\
 \textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new\_state$ and $delete\_state$ functions.
 
-\section{Usefull Skills for the Assembeler}
-Generally, knowledge in how the binary instructions will be decoded in the emulator helps in understanding the encoding for assembly instructions. As such, members working on the emulator could help provide valuable feedback on any misunderstandings regarding the assembler.
-\\\\
-Specifically in terms of implementation details, there are a few functions used in the emulator that we have found useful for the assembler. These are general functions that deal with bits manipulation. Examples of such functions include a function to logical shift right and a function to extract certain bits from a binary representation.
-
-\section{Challenging tasks and resolutions}
-We think it will be challenging to implement the extensions for this project because we have just one Raspberry Pi for four people in the group. Nevertheless we are going to meet every time in order to mitigate these circumstances and in order to allow everyone access to the Raspberry Pi.
-\\\\
-Of course another difficulty is going to be the small amount of time we have for this project, and therefore we have to implement extensions that are doable before the deadline. Hence, we are going to plan first every detail of our extension and consider if it is possible to finish it before the time and then we will split the work between the four of us.
-
-
-
+%\section{Usefull Skills for the Assembeler}
+%Generally, knowledge in how the binary instructions will be decoded in the emulator helps in understanding the encoding for assembly instructions. As such, members working on the emulator could help provide valuable feedback on any misunderstandings regarding the assembler.
+%\\\\
+%Specifically in terms of implementation details, there are a few functions used in the emulator that we have found useful for the assembler. These are general functions that deal with bits manipulation. Examples of such functions include a function to logical shift right and a function to extract certain bits from a binary representation.
 
 \section{Details About Assembler}
 The Assembler can be split into two main loops, the first pass, and the second. In the first pass, the assembler builds the symbol table to be used for branching. It also initializes several parameters to be used in the second pass such as the number of instructions, etc.
@@ -152,69 +146,66 @@ The data structures used throughout the assembler are as follows: The symbol tab
 \textbf{strutils.c:} Contains several helper functions that helps string parsing. 
 
 \section{Details about the Extension}
-We decided to build and design a game using the C programming language and utilise the Raspberry Pi as a game controller. Regarding the game, it is a Rhythm game with a fighting theme. The player controls a Main Character (MC) who is situated in the middle. Enemies will approach the MC from the left and right. The player then has to time his attacks to the left and right based on a musical rhythm, in order to defeat enemies and score points. Control of the game is through five buttons on the Raspberry Pi, which will emulate keyboard inputs through BlueTooth.
-\\\\
-An example of the game is: \\\\
-% insert Demo of the game!!!!
-\textbf{Controller}\\\\
-\textbf{1.Abstract:}  Yoram and Halite did the controller part of our extension. In this part, we built software which allows the Raspberry Pi to function as a bluetooth keyboard emulator. The Raspberry Pi is connected to a breadboard which functions as our "Keyboard". If we pressed the buttons on our "Keyboard", we can control the action of our main character in our BEATIT game. For this part we followed the “Emulate a Bluetooth keyboard with the Raspberry Pi” tutorial and made relevant changes to it. 
-For the programming part, we choose the Python language to code our program. The language seems to be the most suitable for the task, as there are plenty of libraries we can use to build our controller in a really limited time. None of us have learned Python before, so we spent three days to learn the python’s syntax and useful functions.
-\\\\
-\textbf{2.Hardware:}\\
+We decided to build and design a game using the C programming language and utilize the Raspberry Pi as a game controller. The game is a rhythm fighting game hybrid, where the player will control Michael Jackson to fight off thugs, to the tune and beats of famous MJ songs. MJ starts at the middle, and enemies will approach MJ from the left and right of the screen. The player then has to time his attacks to the left and right based on the rhythm of the song, in order to defeat enemies and score points. Control of the game is through five buttons on the Raspberry Pi, which will emulate keyboard inputs through BlueTooth. The aim of the game is using a control to play and have fun
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{game.jpg}
+\caption{\label{fig:pi}This is an example of the game}
+\end{figure}
+
+
+\textbf{1.Abstract:}  Yoram and Halite did the controller part of our extension. In this part, we built software which allows the Raspberry Pi to function as a bluetooth keyboard emulator. The Raspberry Pi is connected to a breadboard which functions as our "Keyboard". If we pressed the buttons on our "Keyboard", we can control the action of our main character in our BEATIT game. For this part we followed the “Emulate a Bluetooth keyboard with the Raspberry Pi” tutorial and made relevant changes to it.
+For the programming part, we choose the Python language to code our program. The language seems to be the most suitable for the task, as there are plenty of libraries we can use to build our controller in a really limited time. None of us have learned Python before, so we spent three days to learn the python’s syntax and useful functions.\\\\
+Meanwhile, Justin and Hadrian built the game from scratch. In this section, we used X11lib and SDL2 as interface libraries for IO, and everything else was written from scratch. We built a render library that parses bitmap files into a 2D pixel array, does sprite logical processing and has several entry point functions to be used with X11lib to display the pixels onto the screen. We also built a gameloop library that includes separate libraries for the player, enemy, levels, gameState, menus and so on. The main game loop updates the game state and then renders the gamestate onto the screen.\\\\
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{game_graphics.png}
+\caption{\label{fig:pi}This is a demonstration of the game screen}
+\end{figure}
+
+
+\setlength{\parindent}{0cm}
+\textbf{2.Hardware:}\\\\
 1) A Raspberry Pi with all necessary peripherals   \\\\
 2) A USB Bluetooth dongle \\\\
 3) A USB hub – if you want to use a keyboard and mouse at the same time as the Bluetooth dongle  \\\\
-4) 5 button switches  (emulate A, S, W, E, Q respectively).  \\\\
+4) 5 button switches  (emulate A, S, E, Q, W respectively in Figure 1).  \\\\
 
-\begin{figure}
+\begin{figure} [h]
 \centering
 \includegraphics[width=0.6\textwidth]{pidemo.png}
 \caption{\label{fig:pi}This is the demonstration of pi and PC connection}
 \end{figure}
 
-%insert pi_demo.gif make it big!!!!
+
+\setlength{\parindent}{0cm}
 \textbf{3.Files:} \\\\
-\textbf{1) kb\_client.py :}\\
-a) connection between Pi and PC. We use bluetooth dongle as a connection device and D-Bus as the communication interface by using SDP(Service Discovery Protocol)
+\underline{kb\_client.py:}\\
+\quad  i) Connection between Pi and PC. We use bluetooth dongle as a connection device and D-Bus as the communication interface by using SDP(Service Discovery Protocol)
 \\\\
-b) get input from pi: We import RPi.GPIO library to setup and read our inputs. And use keymap.py file to convert our input into codes which is compatible to the D-BUS SDP format.
+ii) Gets the input from pi: We import RPi.GPIO library to setup and read our inputs. And use keymap.py file to convert our input into codes which is compatible to the D-BUS SDP format.
 \\\\
-c) sending input:	this part is simple, after getting the correct sending format, simple use cinterrupt.send(str) to send our input to the server, and our pc would get the signal from it.
+iii) Sending the input:	this part is simple, after getting the correct sending format, simple use cinterrupt.send(str) to send our input to the server, and our pc would get the signal from it.
 \\\\
-\textbf{2) keymap.py:} This file contains a dictionary mapping evdev keys to Bluetooth keys \\
-sendingstring.py and btkserver.py: we use the authors code, the details is in the references.
-\\\\
-\textbf{4.Testing:} After coding, we tried to connect our pi to different devices: Linux, Windows, Mac PCs and Android and IOS phones. The connection overall is stable and suitable for the above devices. The effect of pressing the buttons are stable, correct and instance.
-\\\\
-\textbf{5.Definitions:} \\\\
-\textbf{1) D-Bus:} it is a framework used commonly on Linux that allows communication and remote procedure calls (calling a function in a different program) between different processes. \\\\
-\textbf{2) SDP:} The Session Description Protocol (SDP) is a format for describing streaming media communications parameters. 
-\\\\
-\textbf{7.Reference:}\\
-https://www.gadgetdaily.xyz/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/\\
-http://mlabviet2016.blogspot.com/2017/09/make-raspberry-pi3-as-emulator.html\\
-https://en.wikipedia.or/wiki/Session\_Description\_Protocol\\
-https://impythonist.wordpress.com/2014/02/01/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/\\
-
-
+\underline{keymap.py:} \\This file contains a dictionary mapping evdev keys to Bluetooth keys 
+sendingstring.py and btkserver.py (We use the authors code, the details are in the references.)
 \section{Design and Challenges/Problems}
+At the beginning we thought it would be challenging to implement the extensions for this project because we had just one Raspberry Pi for four people in the group. 
+Moreover, another issue to take in consideration was going to be the small amount of time we had for this project, after solving the first three parts. Hence, we planned first every detail of our extension and then we split the work between the four of us.
+\\\\
 \textbf{game logic:} When dealing with implementing the game logic, great care had to be taken to make any features extensible. For example, it might be tempting to utilise a one liner hack in order to achieve an outcome in the short term. However, we have noticed that this necessitates large refactorings in the future as the codebase grows larger.
 \\\\
 \textbf{rendering:} It was difficult to find an appropriate graphics library that could be light weight, support a multitude of platforms, whilst using the standard libraries (as we decided not to use libraries that aren't installed in lab machines). Eventually we managed to find and slightly modify an libX11 wrapper, that was very lightweight and supported simple input output detection. The bare bone nature of the library made it inefficient, which eventually led to the slowdown of the application on Lab computers, requiring us to optimize the rendering process. 
 \\\\
 \textbf{audio:} It was near impossible to find a C audio library that could handle cross platform file parsing and audio playback. We eventually decided to rely on the built in SDL2.
-% TODO
-
 \section{Testing the Extension}
 We split the work into two parts and we have tested both of them.
 \\\\
 \textbf{Controller:} After coding, we tried to connect our pi to different devices: Linux, Windows, Mac PCs and Android and IOS phones. The connection overall is stable and suitable for the above devices. The effect of pressing the buttons is stable, correct and always the same.
 \\\\
-%BEAT IT testing  JUSTIN!!! and HADRAIN!!!
 After connecting the pi to the PC, The BEATIT game and all its functions work correctly.
 We think that this way of testing our project is overall effective.
-\\
-
 \section{Group reflection}
 We worked really well together. From the beginning we communicated a lot. We understood the strengths of each member of the group and, accordingly, we split the different tasks throughout the implementation of the project. We started splitting the work since the beginning with the emulator and we found it very useful. Everyday, we would meet all together to explain the progresses and to plan the next tasks. We used git extensively for version control. Each of us worked on a different branch initially and then merged all the different parts together at a later stage. 
 \\\\
@@ -222,7 +213,7 @@ We believe that we communicated in a very efficient way and that the way we spli
 
 \section{Individual reflection}
 \textbf{Halite:}\\
-I personally believe that this project is one of the greatest experience in my life. During this period, I learned lots of communication skills, programming cooperation techniques, as well as useful project developing knowledge. For example, I learned how to use GitLab and GitHub efficiently with my teammates. Also, I learned how the network connection works and what is D-Bus, SDP. Furthermore, I acquired some electrical components and circuits knowledge whilst working with Raspberry Pi. Regarding our team, I think we did a really great job. None of us had much experience in a large scale programming group project before. However, we managed to develop a game and bluetooth keyboard in a really limited time. I think for a bunch of beginners it is not easy. All of the members worked hard, learned lots of new knowledge, and made really great contributions to the project. I want to thank the department for providing us with this opportunity and my teammates for being wonderful.
+I personally believe that this project is one of the greatest experience in my life. During this period, I learned lots of communication skills, programming cooperation techniques, as well as useful project developing knowledge. For example, I learned how to use GitLab and GitHub efficiently with my teammates. Also, I learned how the network connection works and what is D-Bus, SDP. Furthermore, I acquired some electrical components and circuits knowledge whilst working with Raspberry Pi. Regarding our team, none of us had much experience in a large scale programming group project before. However, we managed to develop a game and bluetooth keyboard in a really limited time. I think for a bunch of beginners it is not easy. All of the members worked hard, learned lots of new knowledge, and made really great contributions to the project. I want to thank the department for providing us with this opportunity and my teammates for being wonderful.
 \\\\
 \textbf{Yoram:}\\
 I believe that we really worked proficiently together. I fitted in the group very well. I have never programmed in C before, as other members of my group, but all together we helped each other and we put a lot of effort in learning and in solving the different parts of the project. At the beginning I was a little bit scared because I did not know this programming language, but I was not the only one and I just had to work maybe harder at the beginning to learn it. Some of my strengths that I think really helped the group are the creativity, the fact that I want to have a clean and structured code, and the will to test every single function to be sure that everything works as we want.
@@ -232,7 +223,13 @@ I would not change anything we did as a group because we had an efficient commun
 I felt like the extension pushed our team to a new level. The amount of roadblocks we encountered skyrocketed, and the fact that all of the development being so interlinked required us to work closely with each other to ensure there will be no bottlenecks in development. This really pushed our team to bond closer as we pushed through late nights together. I feel like I've learned a lot about group project planning, and compartmentalizing our workload, and I'm very happy on how we managed to work very efficiently with minimal stalling from the lack of teamwork. I feel that in the future, I would probably spend a little more time laying out and agreeing on a clear project style, so that we can avoid spending time refactoring and reformatting code that has already been written. Overall, I'm impressed of how well the work-flow turned out.\\
 \\
 \textbf{Hadrian:}\\
-Compared to when we were dealing with the assembler and emulator, I feel like the group has improved in terms of work distribution and having a smooth work flow. There were seldom, if any, bottlenecks in the development process for our extension. The direction was set from the initial stage and everyone was on the same page throughout the project. Specific to the extension, I feel like my knowledge in game development has helped made this project smoother. This is in terms of knowing common game development practices that helped form the skeleton of the game logic. This has helped speed up the foundation development process and allowed us to quickly move on to higher level game logic.There were certain minor issues that we would do differently when working in future group projects. An example would be to agree upon a certain style of code. Simple things such as number of spaces for indents and having camelCase variables instead of underscoring drained us of a couple hours in refactoring. Hence, it would be beneficial in future group projects to agree upon certain practices before coding.
+Compared to when we were dealing with the assembler and emulator, I feel like the group has improved in terms of work distribution and having a smooth work flow. There were seldom, if any, bottlenecks in the development process for our extension. The direction was set from the initial stage and everyone was on the same page throughout the project. Specific to the extension, I feel like my knowledge in game development has helped made this project smoother. This is in terms of knowing common game development practices that helped form the skeleton of the game logic. There were certain minor issues that we would do differently when working in future group projects. An example would be to agree upon a certain style of code. Simple things such as number of spaces for indents and having camelCase variables instead of underscoring drained us of a couple hours in refactoring. Hence, it would be beneficial in future group projects to agree upon certain practices before coding.
+
+\section{References:}
+https://www.gadgetdaily.xyz/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/\\
+http://mlabviet2016.blogspot.com/2017/09/make-raspberry-pi3-as-emulator.html\\
+https://en.wikipedia.or/wiki/Session\_Description\_Protocol\\
+https://impythonist.wordpress.com/2014/02/01/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/
 
 
 
