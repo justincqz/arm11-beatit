@@ -113,7 +113,7 @@ There were several keywords that helped us to decompose the whole emulator, such
 \\\\
 \textbf{emudecode.c} contains 4 major functions according to 4 different instruction types.
 \\\\
-\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute\_data\_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}\\
+\textbf{emuexecute.c} contains 4 major functions according to 4 different instruction types. And specifically, the $execute\_data\_processing$ function implements the instruction by putting elements into \textbf{alu} and \textbf{shifter}, which are combined in \textbf{operation.c}
 \\\\
 \textbf{operation.c:} contains all the operations coming from the alu and the shifter.
 \\\\
@@ -121,15 +121,10 @@ There were several keywords that helped us to decompose the whole emulator, such
 \\\\
 \textbf{emustruct.h:} contains all the struct types we used in the project, such as State, Storage and Instructions, and the declaration of $new\_state$ and $delete\_state$ functions.
 
-\section{Usefull Skills for the Assembeler}
-Generally, knowledge in how the binary instructions will be decoded in the emulator helps in understanding the encoding for assembly instructions. As such, members working on the emulator could help provide valuable feedback on any misunderstandings regarding the assembler.
-\\\\
-Specifically in terms of implementation details, there are a few functions used in the emulator that we have found useful for the assembler. These are general functions that deal with bits manipulation. Examples of such functions include a function to logical shift right and a function to extract certain bits from a binary representation.
-
-\section{Challenging tasks and resolutions}
-We think it will be challenging to implement the extensions for this project because we have just one Raspberry Pi for four people in the group. Nevertheless we are going to meet every time in order to mitigate these circumstances and in order to allow everyone access to the Raspberry Pi.
-\\\\
-Of course another difficulty is going to be the small amount of time we have for this project, and therefore we have to implement extensions that are doable before the deadline. Hence, we are going to plan first every detail of our extension and consider if it is possible to finish it before the time and then we will split the work between the four of us.
+%\section{Usefull Skills for the Assembeler}
+%Generally, knowledge in how the binary instructions will be decoded in the emulator helps in understanding the encoding for assembly instructions. As such, members working on the emulator could help provide valuable feedback on any misunderstandings regarding the assembler.
+%\\\\
+%Specifically in terms of implementation details, there are a few functions used in the emulator that we have found useful for the assembler. These are general functions that deal with bits manipulation. Examples of such functions include a function to logical shift right and a function to extract certain bits from a binary representation.
 
 \section{Details About Assembler}
 The Assembler can be split into two main loops, the first pass, and the second. In the first pass, the assembler builds the symbol table to be used for branching. It also initializes several parameters to be used in the second pass such as the number of instructions, etc.
@@ -151,24 +146,17 @@ The data structures used throughout the assembler are as follows: The symbol tab
 \textbf{strutils.c:} Contains several helper functions that helps string parsing. 
 
 \section{Details about the Extension}
-We decided to build and design a game using the C programming language and utilise the Raspberry Pi as a game controller. Regarding the game, it is a Rhythm game with a fighting theme. The player controls a Main Character (MC) who is situated in the middle. Enemies will approach the MC from the left and right. The player then has to time his attacks to the left and right based on a musical rhythm, in order to defeat enemies and score points. Control of the game is through five buttons on the Raspberry Pi, which will emulate keyboard inputs through BlueTooth.
-\\\\
-An example of the game is: \\\\
-\begin{figure}
-\centering
-\includegraphics[width=0.6\textwidth]{game.jpg}
-\caption{\label{fig:pi}This is how the game works}
-\end{figure}
+We decided to build and design a game using the C programming language and utilise the Raspberry Pi as a game controller. The game is a rhythm fighting game hybrid, where the player will control Michael Jackson to fight off thugs, to the tune and beats of famous MJ songs. MJ starts at the middle, and enemies will approach MJ from the left and right of the screen. The player then has to time his attacks to the left and right based on the rhythm of the song, in order to defeat enemies and score points. Control of the game is through five buttons on the Raspberry Pi, which will emulate keyboard inputs through BlueTooth.
 
-\textbf{Controller}\\\\
-\textbf{1.Abstract:}  Yoram and Halite did the controller part of our extension. In this part, we built software which allows the Raspberry Pi to function as a bluetooth keyboard emulator. The Raspberry Pi is connected to a breadboard which functions as our "Keyboard". If we pressed the buttons on our "Keyboard", we can control the action of our main character in our BEATIT game. For this part we followed the “Emulate a Bluetooth keyboard with the Raspberry Pi” tutorial and made relevant changes to it. 
-For the programming part, we choose the Python language to code our program. The language seems to be the most suitable for the task, as there are plenty of libraries we can use to build our controller in a really limited time. None of us have learned Python before, so we spent three days to learn the python’s syntax and useful functions.
-\\\\
-\textbf{2.Hardware:}\\
+\textbf{1.Abstract:}  Yoram and Halite did the controller part of our extension. In this part, we built software which allows the Raspberry Pi to function as a bluetooth keyboard emulator. The Raspberry Pi is connected to a breadboard which functions as our "Keyboard". If we pressed the buttons on our "Keyboard", we can control the action of our main character in our BEATIT game. For this part we followed the “Emulate a Bluetooth keyboard with the Raspberry Pi” tutorial and made relevant changes to it.
+For the programming part, we choose the Python language to code our program. The language seems to be the most suitable for the task, as there are plenty of libraries we can use to build our controller in a really limited time. None of us have learned Python before, so we spent three days to learn the python’s syntax and useful functions.\\\\
+Meanwhile, Justin and Hadrian built the game from scratch. In this section, we used X11lib and SDL2 as interface libraries for IO, and everything else was written from scratch. We built a render library that parses bitmap files into a 2D pixel array, does sprite logical processing and has several entry point functions to be used with X11lib to display the pixels onto the screen. We also built a gameloop library that includes separate libraries for the player, enemy, levels, gameState, menus and so on. The main game loop updates the game state and then renders the gamestate onto the screen.
+\newpage
+\textbf{2.Hardware:}\\\\
 1) A Raspberry Pi with all necessary peripherals   \\\\
 2) A USB Bluetooth dongle \\\\
 3) A USB hub – if you want to use a keyboard and mouse at the same time as the Bluetooth dongle  \\\\
-4) 5 button switches  (emulate A, S, W, E, Q respectively).  \\\\
+4) 5 button switches  (emulate A, S, E, Q, W respectively in Figure 1).  \\\\
 
 \begin{figure}
 \centering
@@ -178,17 +166,17 @@ For the programming part, we choose the Python language to code our program. The
 
 %insert pi_demo.gif make it big!!!!
 \textbf{3.Files:} \\\\
-\textbf{1) kb\_client.py :}\\
-a) connection between Pi and PC. We use bluetooth dongle as a connection device and D-Bus as the communication interface by using SDP(Service Discovery Protocol)
+\underline{kb\_client.py:}\\
+\quad  i) Connection between Pi and PC. We use bluetooth dongle as a connection device and D-Bus as the communication interface by using SDP(Service Discovery Protocol)
 \\\\
-b) get input from pi: We import RPi.GPIO library to setup and read our inputs. And use keymap.py file to convert our input into codes which is compatible to the D-BUS SDP format.
+ii) Gets the input from pi: We import RPi.GPIO library to setup and read our inputs. And use keymap.py file to convert our input into codes which is compatible to the D-BUS SDP format.
 \\\\
-c) sending input:	this part is simple, after getting the correct sending format, simple use cinterrupt.send(str) to send our input to the server, and our pc would get the signal from it.
+iii) Sending the input:	this part is simple, after getting the correct sending format, simple use cinterrupt.send(str) to send our input to the server, and our pc would get the signal from it.
 \\\\
-\textbf{2) keymap.py:} This file contains a dictionary mapping evdev keys to Bluetooth keys \\
-sendingstring.py and btkserver.py: we use the authors code, the details is in the references.
+\underline{keymap.py:} \\This file contains a dictionary mapping evdev keys to Bluetooth keys 
+sendingstring.py and btkserver.py (We use the authors code, the details is in the references.)
 \\\\
-\textbf{4.Testing:} After coding, we tried to connect our pi to different devices: Linux, Windows, Mac PCs and Android and IOS phones. The connection overall is stable and suitable for the above devices. The effect of pressing the buttons are stable, correct and instance.
+\textbf{4. Testing:} \\After coding, we tried to connect our pi to different devices: Linux, Windows, Mac PCs and Android and IOS phones. The connection overall is stable and suitable for the above devices. The effect of pressing the buttons are stable, correct and instance.
 \\\\
 \textbf{5.Definitions:} \\\\
 \textbf{1) D-Bus:} it is a framework used commonly on Linux that allows communication and remote procedure calls (calling a function in a different program) between different processes. \\\\
@@ -198,17 +186,16 @@ sendingstring.py and btkserver.py: we use the authors code, the details is in th
 https://www.gadgetdaily.xyz/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/\\
 http://mlabviet2016.blogspot.com/2017/09/make-raspberry-pi3-as-emulator.html\\
 https://en.wikipedia.or/wiki/Session\_Description\_Protocol\\
-https://impythonist.wordpress.com/2014/02/01/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/\\
-
-
+https://impythonist.wordpress.com/2014/02/01/emulate-a-bluetooth-keyboard-with-the-raspberry-pi/
 \section{Design and Challenges/Problems}
+At the beginning we thought it would be challenging to implement the extensions for this project because we had just one Raspberry Pi for four people in the group. 
+Moreover, another issue to take in consideration was going to be the small amount of time we had for this project, after solving the first three parts. Hence, we planned first every detail of our extension and then we split the work between the four of us.
+\\\\
 \textbf{game logic:} When dealing with implementing the game logic, great care had to be taken to make any features extensible. For example, it might be tempting to utilise a one liner hack in order to achieve an outcome in the short term. However, we have noticed that this necessitates large refactorings in the future as the codebase grows larger.
 \\\\
 \textbf{rendering:} It was difficult to find an appropriate graphics library that could be light weight, support a multitude of platforms, whilst using the standard libraries (as we decided not to use libraries that aren't installed in lab machines). Eventually we managed to find and slightly modify an libX11 wrapper, that was very lightweight and supported simple input output detection. The bare bone nature of the library made it inefficient, which eventually led to the slowdown of the application on Lab computers, requiring us to optimize the rendering process. 
 \\\\
 \textbf{audio:} It was near impossible to find a C audio library that could handle cross platform file parsing and audio playback. We eventually decided to rely on the built in SDL2.
-% TODO
-
 \section{Testing the Extension}
 We split the work into two parts and we have tested both of them.
 \\\\
@@ -217,8 +204,6 @@ We split the work into two parts and we have tested both of them.
 %BEAT IT testing  JUSTIN!!! and HADRAIN!!!
 After connecting the pi to the PC, The BEATIT game and all its functions work correctly.
 We think that this way of testing our project is overall effective.
-\\
-
 \section{Group reflection}
 We worked really well together. From the beginning we communicated a lot. We understood the strengths of each member of the group and, accordingly, we split the different tasks throughout the implementation of the project. We started splitting the work since the beginning with the emulator and we found it very useful. Everyday, we would meet all together to explain the progresses and to plan the next tasks. We used git extensively for version control. Each of us worked on a different branch initially and then merged all the different parts together at a later stage. 
 \\\\
