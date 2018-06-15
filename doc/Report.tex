@@ -156,14 +156,16 @@ We decided to build and design a game using the C programming language and utili
 
 \textbf{1.Abstract:}  Yoram and Halite did the controller part of our extension. In this part, we built software which allows the Raspberry Pi to function as a bluetooth keyboard emulator. The Raspberry Pi is connected to a breadboard which functions as our "Keyboard". If we pressed the buttons on our "Keyboard", we can control the action of our main character in our BEATIT game. For this part we followed the “Emulate a Bluetooth keyboard with the Raspberry Pi” tutorial and made relevant changes to it.
 For the programming part, we choose the Python language to code our program. The language seems to be the most suitable for the task, as there are plenty of libraries we can use to build our controller in a really limited time. None of us have learned Python before, so we spent three days to learn the python’s syntax and useful functions.\\\\
-Meanwhile, Justin and Hadrian built the game from scratch. In this section, we used X11lib and SDL2 as interface libraries for IO, and everything else was written from scratch. We built a render library that parses bitmap files into a 2D pixel array, does sprite logical processing and has several entry point functions to be used with X11lib to display the pixels onto the screen. We also built a gameloop library that includes separate libraries for the player, enemy, levels, gameState, menus and so on. The main game loop updates the game state and then renders the gamestate onto the screen.
+Meanwhile, Justin and Hadrian built the game from scratch. In this section, we used X11lib and SDL2 as interface libraries for IO, and everything else was written from scratch. We built a render library that parses bitmap files into a 2D pixel array, does sprite logical processing and has several entry point functions to be used with X11lib to display the pixels onto the screen. We also built a gameloop library that includes separate libraries for the player, enemy, levels, gameState, menus and so on. The main game loop updates the game state and then renders the gamestate onto the screen.\\\\
 
-\begin{figure} [h]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.6\textwidth]{game_graphics.png}
 \caption{\label{fig:pi}This is a demonstration of the game screen}
 \end{figure}
 
+
+\setlength{\parindent}{0cm}
 \textbf{2.Hardware:}\\\\
 1) A Raspberry Pi with all necessary peripherals   \\\\
 2) A USB Bluetooth dongle \\\\
@@ -176,6 +178,8 @@ Meanwhile, Justin and Hadrian built the game from scratch. In this section, we u
 \caption{\label{fig:pi}This is the demonstration of pi and PC connection}
 \end{figure}
 
+
+\setlength{\parindent}{0cm}
 \textbf{3.Files:} \\\\
 \underline{kb\_client.py:}\\
 \quad  i) Connection between Pi and PC. We use bluetooth dongle as a connection device and D-Bus as the communication interface by using SDP(Service Discovery Protocol)
