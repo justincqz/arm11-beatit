@@ -83,7 +83,9 @@ Halite Abudureyimu and Yoram Boccia co-worked on Part 1: the emulator. Halite de
 \\\\
 Justin Chong and Hadrian Lim co-worked on the second part: the assembler. Justin outlined the structure of the assembler. He implemented the assembler IO and the logic behind parsing string tokens and arranging the bitcodes. He also implemented a dynamic memory access structure to maintain minimal memory cost and reduce input-output overhead. Hadrian Lim implemented key utility functions such as the lookup, extractBits functions. He also helped encode and decode the binary instructions. Debugging and testing was done together by Hadrian and Justin.
 \\\\
-While we were progressing with the project, we used GitLab to combine our work. We did so by pushing up the codes to our own branches, where the group leader was then responsible for merging and maintaining the different codes accordingly. We finished coding the emulator in 26-05-2018. We are now completing the assembler part. We plan to finish the third part and start to work on the fourth part before 02-06-2018.
+We all worked together on the third part and for the extension we split the work again into two parts. Yoram Boccia and Halite Abudureyimu worked on the controller, whilst Justin Chong and Hadrian Lim implemented the game and its structure.  
+\\\\
+While we were progressing with the project, we used GitLab to combine our work. We did so by pushing up the codes to our own branches, where the group leader was then responsible for merging and maintaining the different codes accordingly.
 
 \section{Opinions about Group Working}
 \textbf{Halite:}\\
@@ -129,9 +131,6 @@ We think it will be challenging to implement the extensions for this project bec
 \\\\
 Of course another difficulty is going to be the small amount of time we have for this project, and therefore we have to implement extensions that are doable before the deadline. Hence, we are going to plan first every detail of our extension and consider if it is possible to finish it before the time and then we will split the work between the four of us.
 
-
-
-
 \section{Details About Assembler}
 The Assembler can be split into two main loops, the first pass, and the second. In the first pass, the assembler builds the symbol table to be used for branching. It also initializes several parameters to be used in the second pass such as the number of instructions, etc.
 \\\\
@@ -155,7 +154,12 @@ The data structures used throughout the assembler are as follows: The symbol tab
 We decided to build and design a game using the C programming language and utilise the Raspberry Pi as a game controller. Regarding the game, it is a Rhythm game with a fighting theme. The player controls a Main Character (MC) who is situated in the middle. Enemies will approach the MC from the left and right. The player then has to time his attacks to the left and right based on a musical rhythm, in order to defeat enemies and score points. Control of the game is through five buttons on the Raspberry Pi, which will emulate keyboard inputs through BlueTooth.
 \\\\
 An example of the game is: \\\\
-% insert Demo of the game!!!!
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{game.jpg}
+\caption{\label{fig:pi}This is how the game works}
+\end{figure}
+
 \textbf{Controller}\\\\
 \textbf{1.Abstract:}  Yoram and Halite did the controller part of our extension. In this part, we built software which allows the Raspberry Pi to function as a bluetooth keyboard emulator. The Raspberry Pi is connected to a breadboard which functions as our "Keyboard". If we pressed the buttons on our "Keyboard", we can control the action of our main character in our BEATIT game. For this part we followed the “Emulate a Bluetooth keyboard with the Raspberry Pi” tutorial and made relevant changes to it. 
 For the programming part, we choose the Python language to code our program. The language seems to be the most suitable for the task, as there are plenty of libraries we can use to build our controller in a really limited time. None of us have learned Python before, so we spent three days to learn the python’s syntax and useful functions.
